@@ -4,6 +4,8 @@ import { UpdateRequestService } from "../services/UpdateRequestService";
 import { UpdateRequestRepository } from "../repositories/UpdateRequestRepository";
 import { GridModelRepository } from "../repositories/GridModelRepository";
 import { authMiddleware } from "../middleware/authMiddleware";
+import { body } from "express-validator";
+import { validate } from "../middleware/validate";
 
 const router = Router();
 
@@ -16,6 +18,16 @@ const updateController = new UpdateRequestController(updateService);
 router.post(
   "/create",
   authMiddleware,
+  [
+    body("modelId").isInt({ min: 1 }),
+    body("cells").isArray().withMessage("Cells deve essere un array"),
+    body("cells.*.x").isInt({ min: 0 }),
+    body("cells.*.y").isInt({ min: 0 }),
+    body("cells.*.newValue")
+      .isInt({ min: 0, max: 1 })
+      .withMessage("newValue deve essere 0 o 1")
+  ],
+  validate,
   updateController.createRequest
 );
 
@@ -23,6 +35,10 @@ router.post(
 router.post(
   "/:id/approve",
   authMiddleware,
+  [
+    body().custom(() => true) // nessun body richiesto
+  ],
+  validate,
   updateController.approveRequest
 );
 
@@ -30,6 +46,10 @@ router.post(
 router.post(
   "/:id/reject",
   authMiddleware,
+  [
+    body().custom(() => true)
+  ],
+  validate,
   updateController.rejectRequest
 );
 
