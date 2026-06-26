@@ -8,6 +8,12 @@ import {
 } from "../config/jwt";
 
 export class AuthService {
+
+getUserRepository() {
+  return this.userRepo;
+}
+
+  
   constructor(private userRepo: UserRepository) {}
 
   async login(email: string, password: string) {

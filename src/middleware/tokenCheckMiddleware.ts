@@ -12,7 +12,7 @@ export async function tokenCheckMiddleware(
   if (!user) return res.status(404).json({ error: "User not found" });
 
   if (user.tokens <= 0) {
-    return res.status(402).json({ error: "Not enough tokens" });
+    return res.status(401).json({ error: "Unauthorized: tokens finished" });
   }
 
   next();

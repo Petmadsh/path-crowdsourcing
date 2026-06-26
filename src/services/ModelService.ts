@@ -44,7 +44,6 @@ export class ModelService {
 
     await this.userRepo.decreaseTokens(userId, costTokens);
 
-    // API CORRETTA DI astar-typescript
     // La matrice va passata dentro l'oggetto 'grid' sotto la proprietà 'matrix'
     const finder = new AStarFinder({
       grid: {
@@ -53,14 +52,17 @@ export class ModelService {
       diagonalAllowed: false
     });
 
-    const startTime = Date.now();
+    // MODIFICATO: Misurazione accurata delle prestazioni temporali
+    const startTime = performance.now();
     const path = finder.findPath(start, goal);
-    const endTime = Date.now();
+    const endTime = performance.now();
+
+    const executionTimeMs = endTime - startTime;
 
     return {
       path,
-      cost: path.length,
-      executionTime: endTime - startTime
+      cost: path.length, // Costo calcolato (lunghezza del tragitto ottimo)
+      executionTimeMs: Number(executionTimeMs.toFixed(4)) // Prestazione temporale arrotondata a 4 decimali
     };
   }
 }

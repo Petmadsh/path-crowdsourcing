@@ -15,7 +15,7 @@ export class UserRepository {
 
     if (user.tokens < amount) {
       const err: any = new Error("Not enough tokens");
-      err.status = 401;
+      err.status = 401; 
       throw err;
     }
 
@@ -23,11 +23,15 @@ export class UserRepository {
     await user.save();
   }
 
-  async setTokensByEmail(email: string, tokens: number) {
+  async addTokensByEmail(email: string, amount: number) {
     const user = await this.findByEmail(email);
-    if (!user) throw new Error("User not found");
+    if (!user) {
+      const err: any = new Error("User not found");
+      err.status = 404;
+      throw err;
+    }
 
-    user.tokens = tokens;
+    user.tokens += amount; 
     await user.save();
     return user;
   }

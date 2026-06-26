@@ -2,7 +2,8 @@ import express from "express";
 import authRoutes from "./routes/authRoutes";
 import modelRoutes from "./routes/modelRoutes";
 import updateRequestRoutes from "./routes/updateRequestRoutes";
-import { errorMiddleware } from "./middleware/errorMiddleware";import dotenv from "dotenv";
+import { errorMiddleware } from "./middleware/errorMiddleware";
+import dotenv from "dotenv";
 
 dotenv.config();
 

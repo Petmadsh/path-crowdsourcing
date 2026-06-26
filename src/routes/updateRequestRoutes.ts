@@ -5,7 +5,7 @@ import { UpdateRequestRepository } from "../repositories/UpdateRequestRepository
 import { GridModelRepository } from "../repositories/GridModelRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { authMiddleware } from "../middleware/authMiddleware";
-import { body } from "express-validator";
+import { body, param, query } from "express-validator";
 import { validate } from "../middleware/validate";
 
 const router = Router();
@@ -18,7 +18,23 @@ const updateController = new UpdateRequestController(updateService);
 
 router.get("/sent", authMiddleware, updateController.getSentRequests);
 router.get("/received", authMiddleware, updateController.getReceivedRequests);
-router.get("/history/:modelId", authMiddleware, updateController.getHistory);
+
+/**
+ * MODIFICATO: Aggiunta validazione dei parametri query string (from, to, status)
+ */
+router.get(
+  "/history/:modelId", 
+  authMiddleware, 
+  [
+    param("modelId").isInt({ min: 1 }).withMessage("ID modello non valido"),
+    query("from").optional().isISO8601().withMessage("Il parametro 'from' deve essere una data valida (YYYY-MM-DD)"),
+    query("to").optional().isISO8601().withMessage("Il parametro 'to' deve essere una data valida (YYYY-MM-DD)"),
+    query("status").optional().isIn(["pending", "approved", "rejected"]).withMessage("Status non valido")
+  ],
+  validate,
+  updateController.getHistory
+);
+
 router.get("/status/:modelId", authMiddleware, updateController.getModelStatus);
 
 router.post(

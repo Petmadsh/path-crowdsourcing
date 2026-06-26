@@ -73,10 +73,21 @@ export class UpdateRequestController {
     }
   };
 
+  /**
+   * MODIFICATO: Estrazione e mappatura esplicita dei filtri di data
+   * Consente query del tipo: /updates/history/1?from=2026-06-01&to=2026-06-30&status=approved
+   */
   getHistory = async (req: Request, res: Response) => {
     try {
       const modelId = Number(req.params.modelId);
-      const filters = req.query;
+      
+      // Mappatura pulita e sicura dei parametri attesi dal repository
+      const filters = {
+        from: req.query.from ? String(req.query.from) : undefined,
+        to: req.query.to ? String(req.query.to) : undefined,
+        status: req.query.status ? String(req.query.status) : undefined
+      };
+
       const result = await this.updateService.getHistory(modelId, filters);
       res.json(result);
     } catch (error: any) {
@@ -98,13 +109,7 @@ export class UpdateRequestController {
     try {
       const approverId = req.user.id;
       const { approve = [], reject = [] } = req.body;
-
-      const result = await this.updateService.bulkUpdate(
-        approverId,
-        approve,
-        reject
-      );
-
+      const result = await this.updateService.bulkUpdate(approverId, approve, reject);
       res.json(result);
     } catch (error: any) {
       res.status(error.status || 400).json({ error: error.message });
