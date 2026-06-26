@@ -3,6 +3,7 @@ import { UpdateRequestController } from "../controllers/UpdateRequestController"
 import { UpdateRequestService } from "../services/UpdateRequestService";
 import { UpdateRequestRepository } from "../repositories/UpdateRequestRepository";
 import { GridModelRepository } from "../repositories/GridModelRepository";
+import { UserRepository } from "../repositories/UserRepository";
 import { authMiddleware } from "../middleware/authMiddleware";
 import { body } from "express-validator";
 import { validate } from "../middleware/validate";
@@ -11,46 +12,54 @@ const router = Router();
 
 const updateRepo = new UpdateRequestRepository();
 const modelRepo = new GridModelRepository();
-const updateService = new UpdateRequestService(updateRepo, modelRepo);
+const userRepo = new UserRepository();
+const updateService = new UpdateRequestService(updateRepo, modelRepo, userRepo);
 const updateController = new UpdateRequestController(updateService);
 
-// Creazione richiesta (o applicazione immediata se owner)
+router.get("/sent", authMiddleware, updateController.getSentRequests);
+router.get("/received", authMiddleware, updateController.getReceivedRequests);
+router.get("/history/:modelId", authMiddleware, updateController.getHistory);
+router.get("/status/:modelId", authMiddleware, updateController.getModelStatus);
+
 router.post(
   "/create",
   authMiddleware,
   [
     body("modelId").isInt({ min: 1 }),
-    body("cells").isArray().withMessage("Cells deve essere un array"),
+    body("cells").isArray(),
     body("cells.*.x").isInt({ min: 0 }),
     body("cells.*.y").isInt({ min: 0 }),
-    body("cells.*.newValue")
-      .isInt({ min: 0, max: 1 })
-      .withMessage("newValue deve essere 0 o 1")
+    body("cells.*.newValue").isInt({ min: 0, max: 1 })
   ],
   validate,
   updateController.createRequest
 );
 
-// Approvazione richiesta (solo owner del modello)
 router.post(
   "/:id/approve",
   authMiddleware,
-  [
-    body().custom(() => true) // nessun body richiesto
-  ],
+  [body().custom(() => true)],
   validate,
   updateController.approveRequest
 );
 
-// Rifiuto richiesta (solo owner del modello)
 router.post(
   "/:id/reject",
   authMiddleware,
-  [
-    body().custom(() => true)
-  ],
+  [body().custom(() => true)],
   validate,
   updateController.rejectRequest
+);
+
+router.post(
+  "/bulk",
+  authMiddleware,
+  [
+    body("approve").optional().isArray(),
+    body("reject").optional().isArray()
+  ],
+  validate,
+  updateController.bulkUpdate
 );
 
 export default router;

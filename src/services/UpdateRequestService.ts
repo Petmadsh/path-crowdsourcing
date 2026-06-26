@@ -1,25 +1,25 @@
 import { UpdateRequestRepository } from "../repositories/UpdateRequestRepository";
 import { GridModelRepository } from "../repositories/GridModelRepository";
+import { UserRepository } from "../repositories/UserRepository";
 import { CellUpdate } from "../types/CellUpdate";
 
 export class UpdateRequestService {
   constructor(
     private updateRepo: UpdateRequestRepository,
-    private modelRepo: GridModelRepository
+    private modelRepo: GridModelRepository,
+    private userRepo: UserRepository
   ) {}
 
   private applyCells(grid: number[][], cells: CellUpdate[]): number[][] {
     const newGrid = grid.map(row => [...row]);
-
-    for (const cell of cells) {
+    for (const c of cells) {
       if (
-        cell.y >= 0 && cell.y < newGrid.length &&
-        cell.x >= 0 && cell.x < newGrid[0].length
+        c.y >= 0 && c.y < newGrid.length &&
+        c.x >= 0 && c.x < newGrid[0].length
       ) {
-        newGrid[cell.y][cell.x] = cell.newValue;
+        newGrid[c.y][c.x] = c.newValue;
       }
     }
-
     return newGrid;
   }
 
@@ -28,6 +28,11 @@ export class UpdateRequestService {
     if (!model) throw new Error("Model not found");
 
     const isOwner = model.ownerId === requesterId;
+
+    if (!isOwner) {
+      const cost = 0.25 * cells.length;
+      await this.userRepo.decreaseTokens(requesterId, cost);
+    }
 
     if (isOwner) {
       const updatedGrid = this.applyCells(model.grid, cells);
@@ -39,7 +44,7 @@ export class UpdateRequestService {
       };
     }
 
-    return await this.updateRepo.create({
+    return this.updateRepo.create({
       modelId,
       requesterId,
       cells,
@@ -60,7 +65,6 @@ export class UpdateRequestService {
 
     const updatedGrid = this.applyCells(model.grid, request.cells);
     await this.modelRepo.updateGrid(model.id, updatedGrid);
-
     await this.updateRepo.updateStatus(requestId, "approved");
 
     return {
@@ -83,5 +87,32 @@ export class UpdateRequestService {
     await this.updateRepo.updateStatus(requestId, "rejected");
 
     return { message: "Update rejected" };
+  }
+
+  async bulkUpdate(approverId: number, approveIds: number[], rejectIds: number[]) {
+    for (const id of approveIds) {
+      await this.approveRequest(id, approverId);
+    }
+    for (const id of rejectIds) {
+      await this.rejectRequest(id, approverId);
+    }
+    return { message: "Bulk update completed" };
+  }
+
+  async getHistory(modelId: number, filters: any) {
+    return this.updateRepo.findHistory(modelId, filters);
+  }
+
+  async getModelStatus(modelId: number) {
+    const pending = await this.updateRepo.findPendingByModel(modelId);
+    return { pending: pending.length > 0 };
+  }
+
+  async getRequestsByRequester(requesterId: number) {
+    return this.updateRepo.findByRequester(requesterId);
+  }
+
+  async getRequestsForOwner(ownerId: number) {
+    return this.updateRepo.findPendingByOwner(ownerId);
   }
 }

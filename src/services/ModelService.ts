@@ -1,6 +1,6 @@
 import { GridModelRepository } from "../repositories/GridModelRepository";
 import { UserRepository } from "../repositories/UserRepository";
-import { AStarFinder, Grid } from "astar-typescript";
+import { AStarFinder } from "astar-typescript";
 
 export class ModelService {
   constructor(
@@ -8,8 +8,17 @@ export class ModelService {
     private userRepo: UserRepository
   ) {}
 
+  async getModelsByOwner(ownerId: number) {
+    return this.modelRepo.findByOwner(ownerId);
+  }
+
+  async getModelById(id: number) {
+    return this.modelRepo.findById(id);
+  }
+
   async createModel(ownerId: number, width: number, height: number, grid: number[][]) {
-    const cost = 0.025 * (width * height);
+    const cellCount = width * height;
+    const cost = 0.025 * cellCount;
 
     await this.userRepo.decreaseTokens(ownerId, cost);
 
@@ -21,34 +30,37 @@ export class ModelService {
     });
   }
 
-  async executeModel(modelId: number, start: any, goal: any) {
+  async executeModel(
+    modelId: number,
+    userId: number,
+    start: { x: number; y: number },
+    goal: { x: number; y: number }
+  ) {
     const model = await this.modelRepo.findById(modelId);
     if (!model) throw new Error("Model not found");
 
-    // 1) Creazione griglia
-    const grid = new Grid({
-      matrix: model.grid
-    });
+    const cellCount = model.width * model.height;
+    const costTokens = 0.025 * cellCount;
 
-    // 2) Creazione finder (ACCETTA SOLO 1 ARGOMENTO)
+    await this.userRepo.decreaseTokens(userId, costTokens);
+
+    // API CORRETTA DI astar-typescript
+    // La matrice va passata dentro l'oggetto 'grid' sotto la proprietà 'matrix'
     const finder = new AStarFinder({
-      grid,
-      diagonalAllowed: false,
-      heuristic: "Manhattan"
+      grid: {
+        matrix: model.grid
+      },
+      diagonalAllowed: false
     });
 
-    // 3) Esecuzione pathfinding (ACCETTA SOLO 2 ARGOMENTI)
-    const t0 = performance.now();
-    const path = finder.findPath(
-      { x: start.x, y: start.y },
-      { x: goal.x, y: goal.y }
-    );
-    const t1 = performance.now();
+    const startTime = Date.now();
+    const path = finder.findPath(start, goal);
+    const endTime = Date.now();
 
     return {
       path,
       cost: path.length,
-      executionTime: t1 - t0
+      executionTime: endTime - startTime
     };
   }
 }

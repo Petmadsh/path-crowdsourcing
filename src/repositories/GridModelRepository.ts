@@ -12,7 +12,7 @@ export class GridModelRepository {
     });
   }
 
-  async findAllByOwner(ownerId: number) {
+  async findByOwner(ownerId: number) {
     return GridModel.findAll({ where: { ownerId } });
   }
 

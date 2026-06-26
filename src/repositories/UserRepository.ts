@@ -9,22 +9,25 @@ export class UserRepository {
     return User.findOne({ where: { email } });
   }
 
-  async create(data: Partial<User>) {
-    return User.create(data as any);
-  }
-
-  async updateTokens(userId: number, newAmount: number) {
-    return User.update(
-      { tokens: newAmount },
-      { where: { id: userId } }
-    );
-  }
-
   async decreaseTokens(userId: number, amount: number) {
-    const user = await this.findById(userId);
-    if (!user) return null;
+    const user = await User.findByPk(userId);
+    if (!user) throw new Error("User not found");
+
+    if (user.tokens < amount) {
+      const err: any = new Error("Not enough tokens");
+      err.status = 401;
+      throw err;
+    }
 
     user.tokens -= amount;
+    await user.save();
+  }
+
+  async setTokensByEmail(email: string, tokens: number) {
+    const user = await this.findByEmail(email);
+    if (!user) throw new Error("User not found");
+
+    user.tokens = tokens;
     await user.save();
     return user;
   }
