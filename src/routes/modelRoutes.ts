@@ -4,30 +4,40 @@ import { ModelService } from "../services/ModelService";
 import { GridModelRepository } from "../repositories/GridModelRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { authMiddleware } from "../middleware/authMiddleware";
+import { tokenCheckMiddleware } from "../middleware/tokenCheckMiddleware"; // già importato
 import { body, param } from "express-validator";
 import { validate } from "../middleware/validate";
 
 const router = Router();
 
-// Iniezione dipendenze
 const modelRepo = new GridModelRepository();
 const userRepo = new UserRepository();
 const modelService = new ModelService(modelRepo, userRepo);
 const modelController = new ModelController(modelService);
 
-router.get("/", authMiddleware, modelController.getMyModels);
+// GET /models
+router.get(
+  "/",
+  authMiddleware,
+  tokenCheckMiddleware,
+  modelController.getMyModels
+);
 
+// GET /models/:id
 router.get(
   "/:id",
   authMiddleware,
+  tokenCheckMiddleware,
   [param("id").isInt({ min: 1 }).withMessage("ID modello non valido")],
   validate,
   modelController.getModelById
 );
 
+// POST /models/create
 router.post(
   "/create",
   authMiddleware,
+  tokenCheckMiddleware,
   [
     body("width").isInt({ min: 1 }).withMessage("Width deve essere >= 1"),
     body("height").isInt({ min: 1 }).withMessage("Height deve essere >= 1"),
@@ -41,9 +51,11 @@ router.post(
   modelController.createModel
 );
 
+// POST /models/:id/execute
 router.post(
   "/:id/execute",
   authMiddleware,
+  tokenCheckMiddleware,
   [
     param("id").isInt({ min: 1 }).withMessage("ID modello non valido"),
     body("start.x").isInt({ min: 0 }),

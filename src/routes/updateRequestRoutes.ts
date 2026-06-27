@@ -5,6 +5,7 @@ import { UpdateRequestRepository } from "../repositories/UpdateRequestRepository
 import { GridModelRepository } from "../repositories/GridModelRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { authMiddleware } from "../middleware/authMiddleware";
+import { tokenCheckMiddleware } from "../middleware/tokenCheckMiddleware"; // importalo
 import { body, param, query } from "express-validator";
 import { validate } from "../middleware/validate";
 
@@ -16,15 +17,27 @@ const userRepo = new UserRepository();
 const updateService = new UpdateRequestService(updateRepo, modelRepo, userRepo);
 const updateController = new UpdateRequestController(updateService);
 
-router.get("/sent", authMiddleware, updateController.getSentRequests);
-router.get("/received", authMiddleware, updateController.getReceivedRequests);
-
-/**
- * MODIFICATO: Aggiunta validazione dei parametri query string (from, to, status)
- */
+// GET /updates/sent
 router.get(
-  "/history/:modelId", 
-  authMiddleware, 
+  "/sent",
+  authMiddleware,
+  tokenCheckMiddleware,
+  updateController.getSentRequests
+);
+
+// GET /updates/received
+router.get(
+  "/received",
+  authMiddleware,
+  tokenCheckMiddleware,
+  updateController.getReceivedRequests
+);
+
+// GET /updates/history/:modelId
+router.get(
+  "/history/:modelId",
+  authMiddleware,
+  tokenCheckMiddleware,
   [
     param("modelId").isInt({ min: 1 }).withMessage("ID modello non valido"),
     query("from").optional().isISO8601().withMessage("Il parametro 'from' deve essere una data valida (YYYY-MM-DD)"),
@@ -35,11 +48,19 @@ router.get(
   updateController.getHistory
 );
 
-router.get("/status/:modelId", authMiddleware, updateController.getModelStatus);
+// GET /updates/status/:modelId
+router.get(
+  "/status/:modelId",
+  authMiddleware,
+  tokenCheckMiddleware,
+  updateController.getModelStatus
+);
 
+// POST /updates/create
 router.post(
   "/create",
   authMiddleware,
+  tokenCheckMiddleware,
   [
     body("modelId").isInt({ min: 1 }),
     body("cells").isArray(),
@@ -51,25 +72,31 @@ router.post(
   updateController.createRequest
 );
 
+// POST /updates/:id/approve
 router.post(
   "/:id/approve",
   authMiddleware,
+  tokenCheckMiddleware,
   [body().custom(() => true)],
   validate,
   updateController.approveRequest
 );
 
+// POST /updates/:id/reject
 router.post(
   "/:id/reject",
   authMiddleware,
+  tokenCheckMiddleware,
   [body().custom(() => true)],
   validate,
   updateController.rejectRequest
 );
 
+// POST /updates/bulk
 router.post(
   "/bulk",
   authMiddleware,
+  tokenCheckMiddleware,
   [
     body("approve").optional().isArray(),
     body("reject").optional().isArray()
