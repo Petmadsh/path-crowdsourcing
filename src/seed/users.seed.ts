@@ -7,8 +7,7 @@ export async function seedUsers() {
   const admin = await User.create({
     email: "admin@example.com",
     passwordHash: password,
-    role: "admin",
-    tokens: 9999
+    role: "admin"
   });
 
   const user1 = await User.create({
