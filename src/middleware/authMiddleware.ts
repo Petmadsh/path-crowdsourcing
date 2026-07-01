@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { PUBLIC_KEY, JWT_ALGORITHM } from "../config/jwt";
+import createError from "http-errors";
+
 
 export function authMiddleware(
   req: Request,
@@ -10,17 +12,13 @@ export function authMiddleware(
   const header = req.headers.authorization;
 
   if (!header) {
-    return res.status(401).json({
-      error: "Missing Authorization header",
-    });
+    throw createError.Unauthorized("mancante header di autorizzazione");
   }
 
   const [type, token] = header.split(" ");
 
   if (type !== "Bearer" || !token) {
-    return res.status(401).json({
-      error: "Invalid Authorization format",
-    });
+    throw createError.Unauthorized("Formato di autorizzazione non valido");
   }
 
   try {
@@ -39,13 +37,9 @@ export function authMiddleware(
     next();
   } catch (err: any) {
     if (err.name === "TokenExpiredError") {
-      return res.status(401).json({
-        error: "Token expired",
-      });
+      throw createError.Unauthorized("Token scaduto");
     }
 
-    return res.status(401).json({
-      error: "Invalid token",
-    });
+    throw createError.Unauthorized("Token non valido");
   }
 }

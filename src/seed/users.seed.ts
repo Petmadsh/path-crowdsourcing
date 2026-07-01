@@ -15,14 +15,14 @@ export async function seedUsers() {
     email: "user1@example.com",
     passwordHash: password,
     role: "user",
-    tokens: 200
+    tokens: 10
   });
 
   const user2 = await User.create({
     email: "user2@example.com",
     passwordHash: password,
     role: "user",
-    tokens: 150
+    tokens: 5
   });
 
   return { admin, user1, user2 };

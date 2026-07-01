@@ -1,4 +1,5 @@
 import { User } from "../models/User";
+import createError from "http-errors";
 
 export class UserRepository {
   async findById(id: number) {
@@ -11,12 +12,10 @@ export class UserRepository {
 
   async decreaseTokens(userId: number, amount: number) {
     const user = await User.findByPk(userId);
-    if (!user) throw new Error("User not found");
+    if (!user) throw createError.NotFound("Utente non trovato");
 
     if (user.tokens < amount) {
-      const err: any = new Error("Not enough tokens");
-      err.status = 401; 
-      throw err;
+     throw createError.Unauthorized("Non hai abbastanza token per completare questa operazione");
     }
 
     user.tokens -= amount;
@@ -26,9 +25,7 @@ export class UserRepository {
   async addTokensByEmail(email: string, amount: number) {
     const user = await this.findByEmail(email);
     if (!user) {
-      const err: any = new Error("User not found");
-      err.status = 404;
-      throw err;
+      throw createError.NotFound("Utente non trovato");
     }
 
     user.tokens += amount; 

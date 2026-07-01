@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { UserRepository } from "../repositories/UserRepository";
+import createError from "http-errors";
 
 const userRepo = new UserRepository();
 
@@ -9,10 +10,12 @@ export async function tokenCheckMiddleware(
   next: NextFunction
 ) {
   const user = await userRepo.findById(req.user.id);
-  if (!user) return res.status(404).json({ error: "User not found" });
+  if (!user) {
+    throw createError.Unauthorized("Utente non trovato");
+  }
 
   if (user.tokens <= 0) {
-    return res.status(401).json({ error: "Unauthorized: tokens finished" });
+    throw createError.Unauthorized("Token esauriti. Non puoi completare questa operazione");
   }
 
   next();

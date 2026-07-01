@@ -2,6 +2,7 @@ import { UpdateRequestRepository } from "../repositories/UpdateRequestRepository
 import { GridModelRepository } from "../repositories/GridModelRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { CellUpdate } from "../types/CellUpdate";
+import createError from "http-errors";
 
 export class UpdateRequestService {
   constructor(
@@ -25,7 +26,7 @@ export class UpdateRequestService {
 
   async createRequest(modelId: number, requesterId: number, cells: CellUpdate[]) {
     const model = await this.modelRepo.findById(modelId);
-    if (!model) throw new Error("Model not found");
+    if (!model) throw createError.NotFound("Modello non trovato");
 
     const cost = 0.25 * cells.length;
     await this.userRepo.decreaseTokens(requesterId, cost);
@@ -53,13 +54,13 @@ export class UpdateRequestService {
 
   async approveRequest(requestId: number, approverId: number) {
     const request = await this.updateRepo.findById(requestId);
-    if (!request) throw new Error("Request not found");
+    if (!request) throw createError.NotFound("Richiesta non trovata");
 
     const model = await this.modelRepo.findById(request.modelId);
-    if (!model) throw new Error("Model not found");
+    if (!model) throw createError.NotFound("Modello non trovato");
 
     if (model.ownerId !== approverId) {
-      throw new Error("Only the model owner can approve this request");
+      throw createError.Forbidden("Solo il proprietario del modello può approvare questa richiesta");
     }
 
     const updatedGrid = this.applyCells(model.grid, request.cells);
@@ -74,18 +75,18 @@ export class UpdateRequestService {
 
   async rejectRequest(requestId: number, approverId: number) {
     const request = await this.updateRepo.findById(requestId);
-    if (!request) throw new Error("Request not found");
+    if (!request) throw createError.NotFound("Richiesta non trovata");
 
     const model = await this.modelRepo.findById(request.modelId);
-    if (!model) throw new Error("Model not found");
+    if (!model) throw createError.NotFound("Modello non trovato");
 
     if (model.ownerId !== approverId) {
-      throw new Error("Only the model owner can reject this request");
+      throw createError.Forbidden("Solo il proprietario del modello può rifiutare questa richiesta");
     }
 
     await this.updateRepo.updateStatus(requestId, "rejected");
 
-    return { message: "Update rejected" };
+    return { message: "Richiesta rifiutata" };
   }
 
   async bulkUpdate(approverId: number, approveIds: number[], rejectIds: number[]) {
@@ -95,7 +96,7 @@ export class UpdateRequestService {
     for (const id of rejectIds) {
       await this.rejectRequest(id, approverId);
     }
-    return { message: "Bulk update completed" };
+    return { message: "Aggiornamento Bulk completato" };
   }
 
   async getHistory(modelId: number, filters: any) {
