@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import { PUBLIC_KEY, JWT_ALGORITHM } from "../config/jwt";
 import createError from "http-errors";
 
-
 export function authMiddleware(
   req: Request,
   res: Response,
@@ -12,13 +11,13 @@ export function authMiddleware(
   const header = req.headers.authorization;
 
   if (!header) {
-    throw createError.Unauthorized("mancante header di autorizzazione");
+    return next(createError.Unauthorized("mancante header di autorizzazione"));
   }
 
   const [type, token] = header.split(" ");
 
   if (type !== "Bearer" || !token) {
-    throw createError.Unauthorized("Formato di autorizzazione non valido");
+    return next(createError.Unauthorized("Formato di autorizzazione non valido"));
   }
 
   try {
@@ -37,9 +36,8 @@ export function authMiddleware(
     next();
   } catch (err: any) {
     if (err.name === "TokenExpiredError") {
-      throw createError.Unauthorized("Token scaduto");
+      return next(createError.Unauthorized("Token scaduto"));
     }
-
-    throw createError.Unauthorized("Token non valido");
+    return next(createError.Unauthorized("Token non valido"));
   }
 }

@@ -11,11 +11,11 @@ export async function tokenCheckMiddleware(
 ) {
   const user = await userRepo.findById(req.user.id);
   if (!user) {
-    throw createError.Unauthorized("Utente non trovato");
+    return next(createError.NotFound("User not found"));
   }
 
   if (user.tokens <= 0) {
-    throw createError.Unauthorized("Token esauriti. Non puoi completare questa operazione");
+    return next(createError.Unauthorized("Tokens finished"));
   }
 
   next();
