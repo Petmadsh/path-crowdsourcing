@@ -27,29 +27,28 @@ export class UpdateRequestService {
     const model = await this.modelRepo.findById(modelId);
     if (!model) throw new Error("Model not found");
 
+    const cost = 0.25 * cells.length;
+    await this.userRepo.decreaseTokens(requesterId, cost);
+
     const isOwner = model.ownerId === requesterId;
 
-    if (!isOwner) {
-      const cost = 0.25 * cells.length;
-      await this.userRepo.decreaseTokens(requesterId, cost);
-    }
-
     if (isOwner) {
+      // Il proprietario applica la modifica immediatamente
       const updatedGrid = this.applyCells(model.grid, cells);
       await this.modelRepo.updateGrid(modelId, updatedGrid);
-
       return {
         message: "Update applied immediately (owner request)",
         newGrid: updatedGrid
       };
+    } else {
+      // L'utente non proprietario crea una richiesta in attesa di approvazione
+      return this.updateRepo.create({
+        modelId,
+        requesterId,
+        cells,
+        status: "pending"
+      });
     }
-
-    return this.updateRepo.create({
-      modelId,
-      requesterId,
-      cells,
-      status: "pending"
-    });
   }
 
   async approveRequest(requestId: number, approverId: number) {
