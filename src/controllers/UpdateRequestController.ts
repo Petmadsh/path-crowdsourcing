@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { UpdateRequestService } from "../services/UpdateRequestService";
-import createError from "http-errors";
 
 export class UpdateRequestController {
   constructor(private updateService: UpdateRequestService) {}

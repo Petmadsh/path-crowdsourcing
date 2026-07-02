@@ -35,6 +35,7 @@ export class ModelController {
       const userId = req.user.id;
       const { width, height, grid } = req.body;
 
+      // Solo logica di business - nessuna validazione
       const model = await this.modelService.createModel(userId, width, height, grid);
       res.json(model);
     } catch (err) {
@@ -43,22 +44,22 @@ export class ModelController {
   };
 
   executeModel = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const modelId = Number(req.params.id);
-    const userId = req.user.id;
-    const { start, goal } = req.body;
+    try {
+      const modelId = Number(req.params.id);
+      const userId = req.user.id;
+      const { start, goal } = req.body;
 
-    const result = await this.modelService.executeModel(
-      modelId,
-      userId,
-      start,
-      goal
-    );
+      // Solo logica di business - nessuna validazione
+      const result = await this.modelService.executeModel(
+        modelId,
+        userId,
+        start,
+        goal
+      );
 
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-};
-
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  };
 }

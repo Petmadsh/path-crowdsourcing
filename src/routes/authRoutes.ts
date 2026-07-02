@@ -17,20 +17,40 @@ const authController = new AuthController(authService);
 router.post(
   "/login",
   [
-    body("email").isEmail().withMessage("Email non valida"),
-    body("password").isString().notEmpty().withMessage("Password obbligatoria")
+    body("email")
+      .notEmpty()
+      .withMessage("email è obbligatoria")
+      .bail()
+      .isEmail()
+      .withMessage("email non è valida"),
+      
+    body("password")
+      .notEmpty()
+      .withMessage("password è obbligatoria")
   ],
   validate,
   authController.login
 );
 
+// Ricarica token (solo admin)
 router.post(
   "/refill",
   authMiddleware,
-  roleMiddleware("admin"), // Solo gli admin possono passare questo anello della catena
+  roleMiddleware("admin"),
   [
-    body("email").isEmail().withMessage("Inserire un'email utente valida"),
-    body("amount").isFloat({ gt: 0 }).withMessage("L'ammontare della ricarica deve essere maggiore di 0")
+    body("email")
+      .notEmpty()
+      .withMessage("email è obbligatoria")
+      .bail()
+      .isEmail()
+      .withMessage("email non è valida"),
+
+    body("amount")
+      .notEmpty()
+      .withMessage("amount è obbligatorio")
+      .bail()
+      .isFloat({ gt: 0 })
+      .withMessage("amount deve essere un numero positivo")
   ],
   validate,
   authController.refillTokens

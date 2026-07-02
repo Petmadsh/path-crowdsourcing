@@ -41,6 +41,18 @@ export class ModelService {
       throw createError.NotFound("Modello non trovato");
     }
 
+    // Validazione: coordinate devono essere all'interno della griglia
+    if (start.x < 0 || start.x >= model.width || start.y < 0 || start.y >= model.height) {
+      throw createError.BadRequest(
+        `Start (${start.x}, ${start.y}) fuori dalla griglia ${model.width}x${model.height}`
+      );
+    }
+    if (goal.x < 0 || goal.x >= model.width || goal.y < 0 || goal.y >= model.height) {
+      throw createError.BadRequest(
+        `Goal (${goal.x}, ${goal.y}) fuori dalla griglia ${model.width}x${model.height}`
+      );
+    }
+
     const cellCount = model.width * model.height;
     const costTokens = 0.025 * cellCount;
     await this.userRepo.decreaseTokens(userId, costTokens);
