@@ -11,6 +11,19 @@ export class UpdateRequestService {
     private userRepo: UserRepository
   ) {}
 
+  private validateCells(grid: number[][], cells: CellUpdate[]): void {
+    const height = grid.length;
+    const width = grid[0]?.length || 0;
+
+    for (const cell of cells) {
+      if (cell.x < 0 || cell.x >= width || cell.y < 0 || cell.y >= height) {
+        throw createError.BadRequest(
+          `Cella (${cell.x}, ${cell.y}) fuori dalla griglia ${width}x${height}`
+        );
+      }
+    }
+  } 
+
   private applyCells(grid: number[][], cells: CellUpdate[]): number[][] {
     const newGrid = grid.map(row => [...row]);
     for (const c of cells) {
@@ -27,6 +40,8 @@ export class UpdateRequestService {
   async createRequest(modelId: number, requesterId: number, cells: CellUpdate[]) {
     const model = await this.modelRepo.findById(modelId);
     if (!model) throw createError.NotFound("Modello non trovato");
+
+    this.validateCells(model.grid, cells);
 
     const cost = 0.25 * cells.length;
     await this.userRepo.decreaseTokens(requesterId, cost);
