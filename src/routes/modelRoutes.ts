@@ -95,7 +95,9 @@ router.post(
       .withMessage("width è obbligatorio")
       .bail()
       .isInt({ min: 1 })
-      .withMessage("width deve essere un numero intero >= 1"),
+      .withMessage("width deve essere un numero intero >= 1")
+      .bail()
+      .toInt(),
     
     // 3. Validazione height
     body("height")
@@ -103,7 +105,9 @@ router.post(
       .withMessage("height è obbligatorio")
       .bail()
       .isInt({ min: 1 })
-      .withMessage("height deve essere un numero intero >= 1"),
+      .withMessage("height deve essere un numero intero >= 1")
+      .bail()
+      .toInt(),
     
     // 4. Validazione grid (con verifiche di dimensione)
     body("grid")
@@ -118,7 +122,9 @@ router.post(
     // 5. Validazione dei valori delle celle
     body("grid.*.*")
       .isInt({ min: 0, max: 1 })
-      .withMessage("Ogni cella deve essere 0 o 1"),
+      .withMessage("Ogni cella deve essere 0 o 1")
+      .bail()
+      .toInt()
   ],
   validate,
   modelController.createModel
@@ -134,7 +140,9 @@ router.post(
     // 1. Parametro ID
     param("id")
       .isInt({ min: 1 })
-      .withMessage("ID modello non valido"),
+      .withMessage("ID modello non valido")
+      .bail()
+      .toInt(),
     
     // 2. Campi extra non consentiti
     body().custom(noExtraFields(['start', 'goal'])),
@@ -152,14 +160,18 @@ router.post(
       .withMessage("start.x è obbligatorio")
       .bail()
       .isInt({ min: 0 })
-      .withMessage("start.x deve essere un numero intero >= 0"),
+      .withMessage("start.x deve essere un numero intero >= 0")
+      .bail()
+      .toInt(),
     
     body("start.y")
       .notEmpty()
       .withMessage("start.y è obbligatorio")
       .bail()
       .isInt({ min: 0 })
-      .withMessage("start.y deve essere un numero intero >= 0"),
+      .withMessage("start.y deve essere un numero intero >= 0")
+      .bail()
+      .toInt(),
     
     // 4. Validazione goal
     body("goal")
@@ -174,14 +186,18 @@ router.post(
       .withMessage("goal.x è obbligatorio")
       .bail()
       .isInt({ min: 0 })
-      .withMessage("goal.x deve essere un numero intero >= 0"),
+      .withMessage("goal.x deve essere un numero intero >= 0")
+      .bail()
+      .toInt(),
     
     body("goal.y")
       .notEmpty()
       .withMessage("goal.y è obbligatorio")
       .bail()
       .isInt({ min: 0 })
-      .withMessage("goal.y deve essere un numero intero >= 0"),
+      .withMessage("goal.y deve essere un numero intero >= 0")
+      .bail()
+      .toInt()
   ],
   validate,
   modelController.executeModel

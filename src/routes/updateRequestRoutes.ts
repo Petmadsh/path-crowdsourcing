@@ -88,40 +88,44 @@ router.post(
       .withMessage("modelId è obbligatorio")
       .bail()
       .isInt({ min: 1 })
-      .withMessage("modelId deve essere un numero intero >= 1"),
+      .withMessage("modelId deve essere un numero intero >= 1")
+      .bail()
+      .toInt(),
     
-    // 3. Validazione cells
+    // 3. Validazione cells: deve essere un array NON VUOTO
     body("cells")
-      .notEmpty()
-      .withMessage("cells è obbligatorio")
-      .bail()
-      .isArray()
-      .withMessage("cells deve essere un array")
-      .bail()
-      .notEmpty()
-      .withMessage("cells non può essere vuoto"),
+      .isArray({ min: 1 })
+      .withMessage("cells e' obbligatorio e deve essere un array non vuoto")
+      .bail(),
     
-    // 4. Validazione di ogni cella
+    // 4. Validazione di ogni cella (solo se cells è valido)
     body("cells.*.x")
       .notEmpty()
       .withMessage("x è obbligatorio per ogni cella")
       .bail()
       .isInt({ min: 0 })
-      .withMessage("x deve essere un numero intero >= 0"),
+      .withMessage("x deve essere un numero intero >= 0")
+      .bail()
+      .toInt(),
+
     
     body("cells.*.y")
       .notEmpty()
       .withMessage("y è obbligatorio per ogni cella")
       .bail()
       .isInt({ min: 0 })
-      .withMessage("y deve essere un numero intero >= 0"),
+      .withMessage("y deve essere un numero intero >= 0")
+      .bail()
+      .toInt(),
     
     body("cells.*.newValue")
       .notEmpty()
       .withMessage("newValue è obbligatorio per ogni cella")
       .bail()
       .isInt({ min: 0, max: 1 })
-      .withMessage("newValue deve essere 0 o 1"),
+      .withMessage("newValue deve essere 0 o 1")
+      .bail()
+      .toInt(),
   ],
   validate,
   updateController.createRequest

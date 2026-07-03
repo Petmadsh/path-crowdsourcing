@@ -51,6 +51,8 @@ router.post(
       .bail()
       .isFloat({ gt: 0 })
       .withMessage("amount deve essere un numero positivo")
+      .bail()
+      .toFloat()
   ],
   validate,
   authController.refillTokens
