@@ -4,7 +4,7 @@ import { sequelize } from "../config/database";
 interface UserAttributes {
   id: number;
   email: string;
-  passwordHash: string;
+  passwordHash?: string;
   role: "user" | "admin";
   tokens: number;
   createdAt?: Date;
@@ -21,6 +21,15 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   public tokens!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  // nascondere passwordHash nelle risposte JSON
+  toJSON() {
+    const values = { ...this.get() };
+    delete values.passwordHash;
+    delete values.createdAt;
+    delete values.updatedAt;
+    return values;
+  }
 }
 
 User.init(
