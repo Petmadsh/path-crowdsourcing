@@ -19,6 +19,11 @@ const modelController = new ModelController(modelService);
 // Validazione personalizzata per la griglia
 const validateGridDimensions = (value: any, { req }: any) => {
   const { height, width } = req.body;
+
+  // Se height o width non sono definiti/numerici, saltiamo i controlli dimensionali 
+  if (height === undefined || width === undefined || typeof height !== 'number' || typeof width !== 'number') {
+    return true;
+  }
   
   // Verifica che la griglia sia un array
   if (!Array.isArray(value)) {
