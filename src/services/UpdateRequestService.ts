@@ -44,7 +44,7 @@ export class UpdateRequestService {
     this.validateCells(model.grid, cells);
 
     const cost = 0.25 * cells.length;
-    await this.userRepo.decreaseTokens(requesterId, cost);
+    const newBalance = await this.userRepo.decreaseTokens(requesterId, cost);
 
     const isOwner = model.ownerId === requesterId;
 
@@ -54,16 +54,25 @@ export class UpdateRequestService {
       await this.modelRepo.updateGrid(modelId, updatedGrid);
       return {
         message: "Update applied immediately (owner request)",
-        newGrid: updatedGrid
+        newGrid: updatedGrid,
+        tokensCost: cost,
+        newBalance
       };
     } else {
       // L'utente non proprietario crea una richiesta in attesa di approvazione
-      return this.updateRepo.create({
-        modelId,
-        requesterId,
-        cells,
-        status: "pending"
-      });
+      const request = await this.updateRepo.create({
+      modelId,
+      requesterId,
+      cells,
+      status: "pending"
+    });
+    
+    
+    return {
+      request,
+      tokensCost: cost,
+      newBalance
+    };
     }
   }
 

@@ -20,14 +20,19 @@ export class ModelService {
   async createModel(ownerId: number, width: number, height: number, grid: number[][]) {
     const cellCount = width * height;
     const cost = 0.025 * cellCount;
-    await this.userRepo.decreaseTokens(ownerId, cost);
-
-    return this.modelRepo.create({
+    const newBalance = await this.userRepo.decreaseTokens(ownerId, cost);
+    const model = await this.modelRepo.create({
       ownerId,
       width,
       height,
       grid
     });
+
+   return {
+     model,
+     tokensCost: cost,
+     newBalance
+  };
   }
 
   async executeModel(
@@ -55,7 +60,7 @@ export class ModelService {
 
     const cellCount = model.width * model.height;
     const costTokens = 0.025 * cellCount;
-    await this.userRepo.decreaseTokens(userId, costTokens);
+    const newBalance = await this.userRepo.decreaseTokens(userId, costTokens);
 
     const finder = new AStarFinder({
       grid: { matrix: model.grid },
@@ -70,6 +75,8 @@ export class ModelService {
       path,
       cost: path.length,
       executionTimeMs: Number((endTime - startTime).toFixed(4)),
+      tokensCost: costTokens,
+      newBalance
     };
   }
 }

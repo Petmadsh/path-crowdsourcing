@@ -20,6 +20,8 @@ export class UserRepository {
 
     user.tokens -= amount;
     await user.save();
+
+    return user.tokens; // Ritorna il nuovo saldo dei token
   }
 
   async addTokensByEmail(email: string, amount: number) {
