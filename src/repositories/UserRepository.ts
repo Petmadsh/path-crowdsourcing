@@ -27,6 +27,11 @@ export class UserRepository {
     if (!user) {
       throw createError.NotFound("Utente non trovato");
     }
+    
+    //  Impedire la ricarica per gli admin
+    if (user.role === "admin") {
+    throw createError.BadRequest("Non è possibile ricaricare un account amministratore");
+    }
 
     user.tokens += amount; 
     await user.save();
