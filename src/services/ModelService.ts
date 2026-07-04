@@ -58,6 +58,11 @@ export class ModelService {
       );
     }
 
+    // start e goal non devono essere ostacoli (valore 1)
+  if (model.grid[start.y][start.x] === 1 || model.grid[goal.y][goal.x] === 1) {
+    throw createError.BadRequest("Start o goal sono ostacoli (valore 1)");
+  }
+
     const cellCount = model.width * model.height;
     const costTokens = 0.025 * cellCount;
     const newBalance = await this.userRepo.decreaseTokens(userId, costTokens);
