@@ -80,6 +80,13 @@ export class UpdateRequestService {
     const request = await this.updateRepo.findById(requestId);
     if (!request) throw createError.NotFound("Richiesta non trovata");
 
+    //Verifica che la richiesta sia ancora in pending
+    if (request.status !== "pending") {
+      throw createError.BadRequest(
+       `Richiesta già ${request.status === "approved" ? "approvata" : "rifiutata"}`
+      );
+    }
+
     const model = await this.modelRepo.findById(request.modelId);
     if (!model) throw createError.NotFound("Modello non trovato");
 
@@ -101,6 +108,12 @@ export class UpdateRequestService {
     const request = await this.updateRepo.findById(requestId);
     if (!request) throw createError.NotFound("Richiesta non trovata");
 
+    if (request.status !== "pending") {
+      throw createError.BadRequest(
+       `Richiesta già ${request.status === "approved" ? "approvata" : "rifiutata"}`
+    );
+  }
+
     const model = await this.modelRepo.findById(request.modelId);
     if (!model) throw createError.NotFound("Modello non trovato");
 
@@ -114,14 +127,32 @@ export class UpdateRequestService {
   }
 
   async bulkUpdate(approverId: number, approveIds: number[], rejectIds: number[]) {
-    for (const id of approveIds) {
+  const errors: string[] = [];
+
+  for (const id of approveIds) {
+    try {
       await this.approveRequest(id, approverId);
+    } catch (err: any) {
+      errors.push(`Approve ${id}: ${err.message}`);
     }
-    for (const id of rejectIds) {
-      await this.rejectRequest(id, approverId);
-    }
-    return { message: "Aggiornamento Bulk completato" };
   }
+
+  for (const id of rejectIds) {
+    try {
+      await this.rejectRequest(id, approverId);
+    } catch (err: any) {
+      errors.push(`Reject ${id}: ${err.message}`);
+    }
+  }
+
+  if (errors.length > 0) {
+    throw createError.BadRequest(
+      `Alcune operazioni non sono state completate: ${errors.join("; ")}`
+    );
+  }
+
+  return { message: "Aggiornamento Bulk completato" };
+}
 
   async getHistory(modelId: number, filters: any) {
     return this.updateRepo.findHistory(modelId, filters);
