@@ -155,8 +155,13 @@ export class UpdateRequestService {
 }
 
   async getHistory(modelId: number, filters: any) {
-    return this.updateRepo.findHistory(modelId, filters);
-  }
+   const history = await this.updateRepo.findHistory(modelId, filters);
+  
+   return {
+     message: history.length === 0 ? "Nessuna modifica trovata in questo arco di tempo" : undefined,
+     updates: history
+   };
+ }
 
   async getModelStatus(modelId: number) {
     const pending = await this.updateRepo.findPendingByModel(modelId);

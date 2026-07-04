@@ -28,6 +28,22 @@ const noExtraFields = (allowedFields: string[]) => {
     return true;
   };
 };
+// Funzione di validazione per i parametri di query extra non consentiti (/updates/history/1????status=pending)
+const noExtraQuery = (allowedParams: string[]) => {
+  return (_value: any, { req }: any) => {
+    const extra = Object.keys(req.query).filter(
+      key => !allowedParams.includes(key)
+    );
+
+    if (extra.length > 0) {
+      throw new Error(
+        `Parametri di query non consentiti: ${extra.join(", ")}`
+      );
+    }
+
+    return true;
+  };
+};
 
 // GET /updates/sent
 router.get(
@@ -54,11 +70,27 @@ router.get(
   roleMiddleware("user"),
   tokenCheckMiddleware,
   [
-    param("modelId").isInt({ min: 1 }).withMessage("ID modello non valido"),
-    query("from").optional().isISO8601().withMessage("Il parametro 'from' deve essere una data valida (YYYY-MM-DD)"),
-    query("to").optional().isISO8601().withMessage("Il parametro 'to' deve essere una data valida (YYYY-MM-DD)"),
-    query("status").optional().isIn(["pending", "approved", "rejected"]).withMessage("Status non valido"),
-  ],
+  query().custom(noExtraQuery(["from", "to", "status"])),
+
+  param("modelId")
+    .isInt({ min: 1 })
+    .withMessage("ID modello non valido"),
+
+  query("from")
+    .optional()
+    .isISO8601()
+    .withMessage("Il parametro 'from' deve essere una data valida (YYYY-MM-DD)"),
+
+  query("to")
+    .optional()
+    .isISO8601()
+    .withMessage("Il parametro 'to' deve essere una data valida (YYYY-MM-DD)"),
+
+  query("status")
+    .optional()
+    .isIn(["pending", "approved", "rejected"])
+    .withMessage("Status non valido"),
+],
   validate,
   updateController.getHistory
 );
