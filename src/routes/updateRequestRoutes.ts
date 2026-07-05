@@ -8,7 +8,7 @@ import { authMiddleware } from "../middleware/authMiddleware";
 import { tokenCheckMiddleware } from "../middleware/tokenCheckMiddleware";
 import { roleMiddleware } from "../middleware/roleMiddleware";
 import { body, param, query } from "express-validator";
-import { validate } from "../middleware/validate";
+import { validate,noExtraFields,noExtraQuery } from "../middleware/validate";
 
 const router = Router();
 
@@ -18,32 +18,6 @@ const userRepo = new UserRepository();
 const updateService = new UpdateRequestService(updateRepo, modelRepo, userRepo);
 const updateController = new UpdateRequestController(updateService);
 
-// Validazione per campi extra non consentiti
-const noExtraFields = (allowedFields: string[]) => {
-  return (value: any) => {
-    const extra = Object.keys(value).filter(k => !allowedFields.includes(k));
-    if (extra.length > 0) {
-      throw new Error(`Campi non consentiti: ${extra.join(', ')}`);
-    }
-    return true;
-  };
-};
-// Funzione di validazione per i parametri di query extra non consentiti (/updates/history/1????status=pending)
-const noExtraQuery = (allowedParams: string[]) => {
-  return (_value: any, { req }: any) => {
-    const extra = Object.keys(req.query).filter(
-      key => !allowedParams.includes(key)
-    );
-
-    if (extra.length > 0) {
-      throw new Error(
-        `Parametri di query non consentiti: ${extra.join(", ")}`
-      );
-    }
-
-    return true;
-  };
-};
 
 // GET /updates/sent
 router.get(
