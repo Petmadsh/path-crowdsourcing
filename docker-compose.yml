@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    container_name: path-crowdsourcing-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+      - ./keys:/app/keys
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_PRIVATE_KEY=/app/keys/private.pem
+      - JWT_PUBLIC_KEY=/app/keys/public.pem
+      - JWT_ALGORITHM=RS256
+      - JWT_EXPIRES_IN=24h
