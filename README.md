@@ -148,3 +148,110 @@ Una volta completato l'avvio, l'applicazione sarà disponibile all'indirizzo:
 ```text
 http://localhost:3000
 ```
+---
+
+## Test dei Middleware con Jest
+
+Per garantire l'affidabilità e la correttezza dei componenti critici, il progetto include test unitari dei middleware utilizzando **Jest** come framework di testing. I test verificano il comportamento dei principali middleware dell'applicazione, assicurando che gestiscano correttamente sia i casi di successo sia quelli di errore.
+
+### Middleware testati
+
+#### 1. `authMiddleware`
+
+Questo middleware è responsabile dell'autenticazione tramite **JSON Web Token (JWT)**.
+
+I test verificano i seguenti scenari:
+
+- **Token mancante**: una richiesta priva dell'header `Authorization` deve restituire `401 Unauthorized`.
+- **Token non valido**: un token malformato o con firma non valida deve essere rifiutato con `401 Unauthorized`.
+- **Token valido**: il middleware deve decodificare il token, estrarre `id` e `role` dell'utente, salvarli in `req.user` e chiamare il middleware successivo.
+
+**Esempio di test** (`authMiddleware.test.ts`):
+
+```typescript
+test('dovrebbe impostare req.user e chiamare next se il token è valido', () => {
+  req.headers = { authorization: 'Bearer valid-token' };
+  const decoded = { id: 1, role: 'user' };
+
+  const jwt = require('jsonwebtoken');
+  jwt.verify.mockReturnValue(decoded);
+
+  authMiddleware(req as Request, res as Response, next);
+
+  expect(req.user).toEqual(decoded);
+  expect(next).toHaveBeenCalledWith();
+});
+```
+
+---
+
+#### 2. `errorMiddleware`
+
+Questo middleware gestisce centralmente gli errori generati durante l'elaborazione delle richieste.
+
+I test verificano:
+
+- **Errore generico**: un errore non appartenente alla classe `HttpError` deve produrre una risposta con status `500 Internal Server Error` e il relativo messaggio.
+- **Errore HTTP personalizzato**: un errore creato tramite `createError()` deve mantenere il codice di stato e il messaggio specificato.
+
+**Esempio di test** (`errorMiddleware.test.ts`):
+
+```typescript
+test('dovrebbe restituire status e messaggio corretti per HttpError', () => {
+  const err = createError(400, 'Bad request');
+
+  errorMiddleware(err, req as Request, res as Response, next);
+
+  expect(res.status).toHaveBeenCalledWith(400);
+  expect(res.json).toHaveBeenCalledWith({
+    error: 'Bad request',
+  });
+});
+```
+
+## Esecuzione dei test
+
+I test possono essere eseguiti in due modalità.
+
+### Localmente
+
+Dopo aver installato le dipendenze del progetto:
+
+```bash
+npm test
+```
+
+### All'interno del container Docker
+
+Se l'applicazione è in esecuzione tramite Docker Compose:
+
+```bash
+docker exec -it path-crowdsourcing-app npm test
+```
+
+## Configurazione di Jest
+
+Il file `jest.config.js` utilizza **ts-jest** per l'esecuzione dei test TypeScript e ricerca automaticamente i file presenti nella cartella `src/**/__tests__/`.
+
+```javascript
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  roots: ['<rootDir>/src'],
+  testMatch: ['**/__tests__/**/*.test.ts'],
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.json' }],
+  },
+};
+```
+
+## Copertura dei test
+
+I test implementati verificano il corretto funzionamento dei middleware più importanti dell'applicazione, assicurando che:
+
+- le richieste non autenticate vengano rifiutate correttamente;
+- i token JWT validi vengano elaborati correttamente;
+- gli errori vengano gestiti e restituiti con un formato uniforme;
+- i codici di stato HTTP siano coerenti con la tipologia di errore.
+
+L'adozione di test automatici riduce il rischio di regressioni, migliora l'affidabilità del progetto e facilita la manutenzione del codice nel tempo.
