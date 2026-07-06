@@ -262,7 +262,11 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 
 #### ❌ CASO 2: Errore – Email non valida (formato errato)
 
-![Login - Successo](./docs/images/CASO2:Errore–Email-non-valida(formato errato).png)
+![Login - Successo](./docs/images/CASO2:Errore–Email-non-valida(formato-errato).png)
+
+#### ❌ CASO 3: Errore – Campo Password mancante
+
+![Login - Successo](./docs/images/CASO3:Errore–Campo-Password-mancante.png)
 
 - **POST /auth/refill** – Ricarica token (solo admin).
 
