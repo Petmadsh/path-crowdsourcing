@@ -291,7 +291,7 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 
 ![Ricarica - Errore](./docs/images/CASO8:Errore–Utente-non-autorizzato.png)
 
-![Ricarica - Errore](./docs/images/CASO7:Errore–Token-mancante-o-non-valido(risosta).png)
+![Ricarica - Errore](./docs/images/CASO8:Errore–Utente-non-autorizzato-(ruolo-diverso-da-admin-risposta).png)
 
 
 
