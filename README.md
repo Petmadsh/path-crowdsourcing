@@ -258,7 +258,7 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 - **POST /auth/login** – Login utente e ottenimento token JWT.
 #### ✅ CASO 1: Successo – Credenziali valide
 
-![Login - Successo](./docs/images/CASO1:Successo–Credenziali-valide.png)
+![Login - Successo](./docs/images/CASO1:Successo.png)
 
 #### ❌ CASO 2: Errore – Email non valida (formato errato)
 
