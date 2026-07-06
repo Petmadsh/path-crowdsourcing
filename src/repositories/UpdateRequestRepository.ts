@@ -8,13 +8,42 @@ export class UpdateRequestRepository {
 
   async findById(id: number) {
     return UpdateRequest.findByPk(id, {
-      include: ["model", "requester"]
+      include: [
+        {
+          association: "model",
+          include: [
+            {
+              association: "owner",
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+            }
+          ]
+        },
+        {
+          association: "requester",
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+        }
+      ]
     });
   }
 
   async findPendingByModel(modelId: number) {
     return UpdateRequest.findAll({
-      where: { modelId, status: "pending" }
+      where: { modelId, status: "pending" },
+      include: [
+        {
+          association: "model",
+          include: [
+            {
+              association: "owner",
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+            }
+          ]
+        },
+        {
+          association: "requester",
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+        }
+      ]
     });
   }
 
@@ -23,7 +52,17 @@ export class UpdateRequestRepository {
       include: [
         {
           association: "model",
-          where: { ownerId }
+          where: { ownerId },
+          include: [
+            {
+              association: "owner",
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+            }
+          ]
+        },
+        {
+          association: "requester",
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
         }
       ],
       where: { status: "pending" }
@@ -33,7 +72,21 @@ export class UpdateRequestRepository {
   async findByRequester(requesterId: number) {
     return UpdateRequest.findAll({
       where: { requesterId },
-      include: ["model"]
+      include: [
+        {
+          association: "model",
+          include: [
+            {
+              association: "owner",
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+            }
+          ]
+        },
+        {
+          association: "requester",
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+        }
+      ]
     });
   }
 
@@ -60,6 +113,23 @@ export class UpdateRequestRepository {
       where.status = filters.status;
     }
 
-    return UpdateRequest.findAll({ where });
+    return UpdateRequest.findAll({
+      where,
+      include: [
+        {
+          association: "model",
+          include: [
+            {
+              association: "owner",
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+            }
+          ]
+        },
+        {
+          association: "requester",
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+        }
+      ]
+    });
   }
 }

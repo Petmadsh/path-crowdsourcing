@@ -15,10 +15,7 @@ export class AuthController {
     }
   };
 
-  /**
-   * NUOVO METODO: Gestisce l'endpoint di ricarica accessibile solo all'Admin.
-   * Aspetta nel body: { "email": "utente@esempio.com", "amount": 50 }
-   */
+
   refillTokens = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, amount } = req.body;

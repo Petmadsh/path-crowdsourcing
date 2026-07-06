@@ -6,11 +6,17 @@ export class GridModelRepository {
     return GridModel.create(data);
   }
 
-  async findById(id: number) {
-    return GridModel.findByPk(id, {
-      include: ["owner", "updateRequests"]
-    });
-  }
+async findById(id: number) {
+  return GridModel.findByPk(id, {
+    include: [
+      {
+        association: "owner",
+        attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
+      },
+      "updateRequests"
+    ]
+  });
+}
 
   async findByOwner(ownerId: number) {
     return GridModel.findAll({ where: { ownerId } });
