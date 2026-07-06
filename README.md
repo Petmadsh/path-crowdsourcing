@@ -272,8 +272,21 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 
 ![Login - Errore](./docs/images/CASO4:Errore–Credenziali-errate-(utente-non-trovato-o-password-sbagliata).png)
 
+#### ❌ CASO 5: Errore – Campi extra non consentiti nel body
+
+![Login - Errore](./docs/images/CASO5:Errore–Campi-extra-non-consentiti-nel-body.png)
 
 - **POST /auth/refill** – Ricarica token (solo admin).
+#### ✅ CASO 6: Successo – Ricarica valida
+
+![Ricarica - Successo](./docs/images/CASO6:Successo–Ricarica-valida.png)
+
+
+
+
+
+
+
 
 #### 2. Modelli (Grid Models)
 
