@@ -294,6 +294,26 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 ![Ricarica - Errore](./docs/images/CASO8:Errore–Utente-non-autorizzato-(ruolo-diverso-da-admin-risposta).png)
 
 
+#### ❌ CASO 9: Errore – Campo amount mancante
+
+![Ricarica - Errore](./docs/images/CASO-9:-Errore-–-Campo-amount-mancante.png)
+
+
+#### ❌ CASO 10: Errore – Campo amount non positivo
+
+![Ricarica - Errore](./docs/images/CASO-10:-Errore-–-Campo-amount-non-positivo.png)
+
+#### ❌ CASO 11: Errore – Tentativo di ricaricare un account amministratore
+
+![Ricarica - Errore](./docs/images/CASO-11:-Errore-–-Tentativo-di-ricaricare-un-account-amministratore.png)
+
+#### ❌ CASO 12: Errore – Utente destinatario non trovato
+
+![Ricarica - Errore](./docs/images/CASO-12:-Errore-–-Utente-destinatario-non-trovato.png)
+
+#### ❌ CASO 13: Errore – Campi extra non consentiti nel body
+
+![Ricarica - Errore](./docs/images/CASO-13:-Errore-–-Campi-extra-non-consentiti-nel-body.png)
 
 
 
