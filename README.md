@@ -111,3 +111,42 @@ In caso di errore in qualsiasi punto della catena, `errorMiddleware` gestisce l'
 | **MVC** | Separazione presentazione, business e dati | Manutenibilità e testabilità |
 | **Repository** | Astrazione del livello di accesso ai dati | Disaccoppiamento e centralizzazione delle query |
 | **Chain of Responsibility** | Gestione delle richieste attraverso middleware componibili | Separazione delle responsabilità e riusabilità |
+
+## Come avviare il progetto con Docker Compose
+
+Il progetto è completamente containerizzato e può essere avviato con un unico comando. Tutti i servizi necessari (applicazione Node.js, database SQLite, generazione delle chiavi JWT e popolamento iniziale del database) vengono gestiti automaticamente tramite **Docker Compose**.
+
+
+### Avvio del progetto
+
+1. Clona il repository:
+
+   ```bash
+   git clone https://github.com/Petmadsh/path-crowdsourcing.git
+   cd path-crowdsourcing
+   ```
+
+2. Avvia il progetto con Docker Compose:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+   > Il flag `--build` ricostruisce l'immagine Docker nel caso in cui siano state apportate modifiche al codice sorgente.
+
+### Operazioni eseguite automaticamente
+
+Al primo avvio, il container esegue automaticamente le seguenti operazioni:
+
+- Generazione delle chiavi RSA (`private.key` e `public.key`) nella cartella `keys/`;
+- Creazione del database SQLite in `data/database.sqlite`;
+- Popolamento del database con i dati iniziali (utenti, modelli e richieste di aggiornamento);
+- Avvio del server Express sulla porta **3000**.
+
+### Accesso all'applicazione
+
+Una volta completato l'avvio, l'applicazione sarà disponibile all'indirizzo:
+
+```text
+http://localhost:3000
+```
