@@ -260,6 +260,9 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 
 ![Login - Successo](./docs/images/CASO1:Successo–Credenziali-valide.png)
 
+#### ❌ CASO 2: Errore – Email non valida (formato errato)
+
+![Login - Successo](./docs/images/CASO2:Errore–Email-non-valida(formato errato).png)
 
 - **POST /auth/refill** – Ricarica token (solo admin).
 
