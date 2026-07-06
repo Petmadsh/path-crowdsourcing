@@ -287,6 +287,11 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 
 ![Ricarica - Errore](./docs/images/CASO7:Errore–Token-mancante-o-non-valido(risosta).png)
 
+#### ❌ CASO 8: Errore – Utente non autorizzato (ruolo diverso da admin)
+
+![Ricarica - Errore](./docs/images/CASO8:Errore–Utente-non-autorizzato-(ruolo-diverso-da-admin-headers).png)
+
+![Ricarica - Errore](./docs/images/CASO7:Errore–Token-mancante-o-non-valido(risosta).png)
 
 
 
