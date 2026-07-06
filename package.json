@@ -4,6 +4,9 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
+    "generate-keys": "mkdir -p keys data && openssl genrsa -out keys/private.pem 2048 && openssl rsa -in keys/private.pem -outform PEM -pubout -out keys/public.pem",
+    "predev": "npm run generate-keys",
+    "preseed": "npm run generate-keys",
     "dev": "ts-node src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",

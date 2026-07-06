@@ -1,26 +1,23 @@
-FROM node:20-slim
+FROM node:20-alpine
 
-# Installa tutti i tool di build e le librerie necessarie
-RUN apt-get update && apt-get install -y \
-    openssl \
-    python3 \
-    make \
-    g++ \
-    libsqlite3-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Install openssl per generare le chiavi nell'entrypoint
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 
+# Copia i file delle dipendenze e installa
 COPY package*.json ./
+RUN npm install
 
-# Installa le dipendenze e ricompila sqlite3 da sorgente
-RUN npm install --build-from-source
-
+# Copia il resto del codice e compila TypeScript
 COPY . .
 RUN npm run build
 
+# Copia lo script di entrypoint e rendilo eseguibile
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
+# Esponi la porta
 EXPOSE 3000
-ENTRYPOINT ["/app/entrypoint.sh"]
+
+ENTRYPOINT ["./entrypoint.sh"]
