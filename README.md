@@ -258,7 +258,7 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 - **POST /auth/login** – Login utente e ottenimento token JWT.
 #### ✅ CASO 1: Successo – Credenziali valide
 
-![Login - Successo](./docs/images/CASO 1: Successo – Credenziali valide.png)
+![Login - Successo](/home/peter/Desktop/Studio/path-crowdsourcing/docs/images/CASO 1: Successo – Credenziali valide.png)
 
 
 - **POST /auth/refill** – Ricarica token (solo admin).
