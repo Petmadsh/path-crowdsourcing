@@ -12,17 +12,26 @@ export class UpdateRequestService {
   ) {}
 
   private validateCells(grid: number[][], cells: CellUpdate[]): void {
-    const height = grid.length;
-    const width = grid[0]?.length || 0;
+   const height = grid.length;
+   const width = grid[0]?.length || 0;
 
-    for (const cell of cells) {
-      if (cell.x < 0 || cell.x >= width || cell.y < 0 || cell.y >= height) {
-        throw createError.BadRequest(
-          `Cella (${cell.x}, ${cell.y}) fuori dalla griglia ${width}x${height}`
-        );
-      }
+   for (const cell of cells) {
+     // 1. Controllo coordinate
+     if (cell.x < 0 || cell.x >= width || cell.y < 0 || cell.y >= height) {
+       throw createError.BadRequest(
+         `Cella (${cell.x}, ${cell.y}) fuori dalla griglia ${width}x${height}`
+       );
+     }
+
+     // 2. Controllo che il valore sia diverso da quello attuale
+    const currentValue = grid[cell.y][cell.x];
+    if (currentValue === cell.newValue) {
+      throw createError.BadRequest(
+        `La cella (${cell.x}, ${cell.y}) ha già valore ${currentValue}, modifica inutile`
+      );
     }
-  } 
+  }
+}
 
   private applyCells(grid: number[][], cells: CellUpdate[]): number[][] {
     const newGrid = grid.map(row => [...row]);
