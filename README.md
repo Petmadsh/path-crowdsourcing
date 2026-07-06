@@ -132,8 +132,6 @@ Il progetto è completamente containerizzato e può essere avviato con un unico 
    docker-compose up --build
    ```
 
-   > Il flag `--build` ricostruisce l'immagine Docker nel caso in cui siano state apportate modifiche al codice sorgente.
-
 ### Operazioni eseguite automaticamente
 
 Al primo avvio, il container esegue automaticamente le seguenti operazioni:
