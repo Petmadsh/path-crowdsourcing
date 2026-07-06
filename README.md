@@ -277,41 +277,41 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 ![Login - Errore](./docs/images/CASO5:Errore–Campi-extra-non-consentiti-nel-body.png)
 
 - **POST /auth/refill** – Ricarica token (solo admin).
-#### ✅ CASO 6: Successo – Ricarica valida
+#### ✅ CASO 1: Successo – Ricarica valida
 
 ![Ricarica - Successo](./docs/images/CASO6:Successo–Ricarica-valida.png)
 
-#### ❌ CASO 7: Errore – Token mancante o non valido
+#### ❌ CASO 2: Errore – Token mancante o non valido
 
 ![Ricarica - Errore](./docs/images/CASO7:Errore–Token-mancante-o-non-valido(headers).png)
 
 ![Ricarica - Errore](./docs/images/CASO7:Errore–Token-mancante-o-non-valido(risosta).png)
 
-#### ❌ CASO 8: Errore – Utente non autorizzato (ruolo diverso da admin)
+#### ❌ CASO 3: Errore – Utente non autorizzato (ruolo diverso da admin)
 
 ![Ricarica - Errore](./docs/images/CASO8:Errore–Utente-non-autorizzato.png)
 
 ![Ricarica - Errore](./docs/images/CASO8:Errore–Utente-non-autorizzato-(ruolo-diverso-da-admin-risposta).png)
 
 
-#### ❌ CASO 9: Errore – Campo amount mancante
+#### ❌ CASO 4: Errore – Campo amount mancante
 
 ![Ricarica - Errore](./docs/images/CASO-9:-Errore-–-Campo-amount-mancante.png)
 
 
-#### ❌ CASO 10: Errore – Campo amount non positivo
+#### ❌ CASO 5: Errore – Campo amount non positivo
 
 ![Ricarica - Errore](./docs/images/CASO-10:-Errore-–-Campo-amount-non-positivo.png)
 
-#### ❌ CASO 11: Errore – Tentativo di ricaricare un account amministratore
+#### ❌ CASO 6: Errore – Tentativo di ricaricare un account amministratore
 
 ![Ricarica - Errore](./docs/images/CASO-11:-Errore-–-Tentativo-di-ricaricare-un-account-amministratore.png)
 
-#### ❌ CASO 12: Errore – Utente destinatario non trovato
+#### ❌ CASO 7: Errore – Utente destinatario non trovato
 
 ![Ricarica - Errore](./docs/images/CASO-12:-Errore-–-Utente-destinatario-non-trovato.png)
 
-#### ❌ CASO 13: Errore – Campi extra non consentiti nel body
+#### ❌ CASO 8: Errore – Campi extra non consentiti nel body
 
 ![Ricarica - Errore](./docs/images/CASO-13:-Errore-–-Campi-extra-non-consentiti-nel-body.png)
 
@@ -321,17 +321,190 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 #### 2. Modelli (Grid Models)
 
 - **GET /models** – Elenco modelli dell'utente.
+
+#### ✅ CASO 1: Successo – Token valido e utente autenticato
+(./docs/images/1.png)
+
+#### ❌ CASO 2: Errore – Token mancante o non valido
+(./docs/images/)
+
 - **GET /models/:id** – Dettaglio di un modello.
+
+#### ✅ CASO 1: Successo – Modello esistente e accessibile
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Modello non trovato
+(./docs/images/)
+
 - **POST /models/create** – Creazione nuovo modello con griglia.
+
+#### ✅ CASO 1: Successo – Dati validi e credito sufficiente
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Campi obbligatori mancanti (width, height, grid)
+(./docs/images/)
+
+#### ❌ CASO 3: Errore – width o height non interi positivi
+(./docs/images/)
+
+#### ❌ CASO 4: Errore – grid non array o dimensioni non corrispondenti a width/height
+(./docs/images/)
+
+#### ❌ CASO 5: Errore – Valori delle celle diversi da 0 o 1
+(./docs/images/)
+
+#### ❌ CASO 6: Credito insufficiente per pagare il costo di creazione
+(./docs/images/)
+
+#### ❌ CASO 7: Campi extra nel body non consentiti
+(./docs/images/)
+
+
 - **POST /models/:id/execute** – Esecuzione dell'algoritmo A* su un modello.
+
+#### ✅ CASO 1: Successo – Start e goal validi, credito sufficiente
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Start o goal fuori dalla griglia
+(./docs/images/)
+
+#### ❌ CASO 3: Errore – Start o goal su cella ostacolo (valore 1)
+(./docs/images/)
+
+#### ❌ CASO 4: Errore – Modello non trovato
+(./docs/images/)
+
+#### ❌ CASO 5: Errore – Credito insufficiente
+(./docs/images/)
+
+#### ❌ CASO 6: Campi start o goal mancanti o malformati
+(./docs/images/)
+
 
 #### 3. Richieste di aggiornamento
 
 - **POST /updates/create** – Proposta di modifica di una o più celle.
+
+#### ✅ CASO 1: Successo – Richiesta da parte di utente non proprietario
+(./docs/images/)
+
+#### ✅ CASO 2: Successo – Richiesta da parte del proprietario del modello (modifica immediata)
+(./docs/images/)
+
+#### ❌ CASO 3: Errore – modelId non valido o modello inesistente
+(./docs/images/)
+
+#### ❌ CASO 4: Errore – cells non è un array o è vuoto
+(./docs/images/)
+
+#### ❌ CASO 5: Errore – Coordinate di una cella fuori griglia
+(./docs/images/)
+
+#### ❌ CASO 6: newValue già uguale al valore corrente (modifica inutile)
+(./docs/images/)
+
+#### ❌ CASO 7: Credito insufficiente
+(./docs/images/)
+
+#### ❌ CASO 8: Campi extra nel body
+(./docs/images/)
+
+
 - **POST /updates/:id/approve** – Approvazione di una richiesta pending.
+
+#### ✅ CASO 1: Successo – Richiesta in pending, utente corrente è il proprietario del modello
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Richiesta già approvata o rifiutata
+(./docs/images/)
+
+#### ❌ CASO 3: Errore – Utente non proprietario del modello
+(./docs/images/)
+
+#### ❌ CASO 4: Errore – Richiesta non trovata
+(./docs/images/)
+
+#### ❌ CASO 5: Errore – ID non numerico
+(./docs/images/)
+
+
 - **POST /updates/:id/reject** – Rifiuto di una richiesta pending.
+
+#### ✅ CASO 1: Successo – Richiesta in pending, utente corrente è il proprietario del modello
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Richiesta già approvata o rifiutata
+(./docs/images/)
+
+#### ❌ CASO 3: Errore – Utente non proprietario del modello
+(./docs/images/)
+
+#### ❌ CASO 4: Errore – Richiesta non trovata
+(./docs/images/)
+
 - **POST /updates/bulk** – Approvazione/rifiuto in blocco di più richieste.
+
+#### ✅ CASO 1: Successo – Tutti gli ID forniti in approve e reject sono validi e gestibili
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Almeno una richiesta non può essere gestita (es. già gestita, non di proprietà, non trovata)
+(./docs/images/)
+
+#### ❌ CASO 3: Errore – approve o reject non sono array di interi
+(./docs/images/)
+
+#### ❌ CASO 4: Errore – Campi extra nel body
+(./docs/images/)
+
+
+
 - **GET /updates/sent** – Richieste inviate dall'utente.
+
+#### ✅ CASO 1: Successo – Token valido
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Token non valido
+(./docs/images/)
+
+
 - **GET /updates/received** – Richieste ricevute (per modelli di proprietà).
+
+#### ✅ CASO 1: Successo – Token valido
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Token non valido
+(./docs/images/)
+
 - **GET /updates/history/:modelId** – Storico modifiche con filtri.
+
+#### ✅ CASO 1: Successo – Filtri opzionali validi (from, to, status)
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Parametri query non consentiti
+(./docs/images/)
+
+#### ❌ CASO 3: Errore – from o to non sono date valide
+(./docs/images/)
+
+#### ❌ CASO 4: Errore – status non è tra pending, approved, rejected
+(./docs/images/)
+
+#### ❌ CASO 5: Errore – Modello non trovato
+(./docs/images/)
+
+#### ❌ CASO 6: Token non valido
+(./docs/images/)
+
+
+
 - **GET /updates/status/:modelId** – Verifica presenza di richieste pending.
+
+#### ✅ CASO 1: Successo – Modello trovato
+(./docs/images/)
+
+#### ❌ CASO 2: Errore – Modello non trovato
+(./docs/images/)
+
+#### ❌ CASO 3: Errore – Token non valido
+(./docs/images/)
+

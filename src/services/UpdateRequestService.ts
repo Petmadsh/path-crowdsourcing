@@ -86,54 +86,52 @@ export class UpdateRequestService {
   }
 
   async approveRequest(requestId: number, approverId: number) {
-    const request = await this.updateRepo.findById(requestId);
-    if (!request) throw createError.NotFound("Richiesta non trovata");
+  const request = await this.updateRepo.findById(requestId);
+  if (!request) throw createError.NotFound("Richiesta non trovata");
 
-    //Verifica che la richiesta sia ancora in pending
-    if (request.status !== "pending") {
-      throw createError.BadRequest(
-       `Richiesta già ${request.status === "approved" ? "approvata" : "rifiutata"}`
-      );
-    }
-
-    const model = await this.modelRepo.findById(request.modelId);
-    if (!model) throw createError.NotFound("Modello non trovato");
-
-    if (model.ownerId !== approverId) {
-      throw createError.Forbidden("Solo il proprietario del modello può approvare questa richiesta");
-    }
-
-    const updatedGrid = this.applyCells(model.grid, request.cells);
-    await this.modelRepo.updateGrid(model.id, updatedGrid);
-    await this.updateRepo.updateStatus(requestId, "approved");
-
-    return {
-      message: "Update applied",
-      newGrid: updatedGrid
-    };
+  // controllo se l'utente che approva è il proprietario del modello
+  const model = await this.modelRepo.findById(request.modelId);
+  if (!model) throw createError.NotFound("Modello non trovato");
+  if (model.ownerId !== approverId) {
+    throw createError.Forbidden("Solo il proprietario del modello può approvare questa richiesta");
   }
 
-  async rejectRequest(requestId: number, approverId: number) {
-    const request = await this.updateRepo.findById(requestId);
-    if (!request) throw createError.NotFound("Richiesta non trovata");
-
-    if (request.status !== "pending") {
-      throw createError.BadRequest(
-       `Richiesta già ${request.status === "approved" ? "approvata" : "rifiutata"}`
+  // controllo se la richiesta è ancora in stato "pending"
+  if (request.status !== "pending") {
+    throw createError.BadRequest(
+      `Richiesta già ${request.status === "approved" ? "approvata" : "rifiutata"}`
     );
   }
 
-    const model = await this.modelRepo.findById(request.modelId);
-    if (!model) throw createError.NotFound("Modello non trovato");
+  const updatedGrid = this.applyCells(model.grid, request.cells);
+  await this.modelRepo.updateGrid(model.id, updatedGrid);
+  await this.updateRepo.updateStatus(requestId, "approved");
 
-    if (model.ownerId !== approverId) {
-      throw createError.Forbidden("Solo il proprietario del modello può rifiutare questa richiesta");
-    }
+  return {
+    message: "Update applied",
+    newGrid: updatedGrid
+  };
+}
 
-    await this.updateRepo.updateStatus(requestId, "rejected");
+async rejectRequest(requestId: number, approverId: number) {
+  const request = await this.updateRepo.findById(requestId);
+  if (!request) throw createError.NotFound("Richiesta non trovata");
 
-    return { message: "Richiesta rifiutata" };
+  const model = await this.modelRepo.findById(request.modelId);
+  if (!model) throw createError.NotFound("Modello non trovato");
+  if (model.ownerId !== approverId) {
+    throw createError.Forbidden("Solo il proprietario del modello può rifiutare questa richiesta");
   }
+
+  if (request.status !== "pending") {
+    throw createError.BadRequest(
+      `Richiesta già ${request.status === "approved" ? "approvata" : "rifiutata"}`
+    );
+  }
+
+  await this.updateRepo.updateStatus(requestId, "rejected");
+  return { message: "Richiesta rifiutata" };
+}
 
   async bulkUpdate(approverId: number, approveIds: number[], rejectIds: number[]) {
   const errors: string[] = [];
@@ -164,6 +162,11 @@ export class UpdateRequestService {
 }
 
   async getHistory(modelId: number, filters: any) {
+
+  const model = await this.modelRepo.findById(modelId);
+  if (!model) {
+    throw createError.NotFound("Modello non trovato");
+  }
    const history = await this.updateRepo.findHistory(modelId, filters);
   
    return {
@@ -173,6 +176,13 @@ export class UpdateRequestService {
  }
 
   async getModelStatus(modelId: number) {
+
+      // Verifica che il modello esista
+  const model = await this.modelRepo.findById(modelId);
+  if (!model) {
+    throw createError.NotFound("Modello non trovato");
+  }
+  
     const pending = await this.updateRepo.findPendingByModel(modelId);
     return { pending: pending.length > 0 };
   }
