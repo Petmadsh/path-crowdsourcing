@@ -136,7 +136,7 @@ Il progetto è completamente containerizzato e può essere avviato con un unico 
 
 Al primo avvio, il container esegue automaticamente le seguenti operazioni:
 
-- Generazione delle chiavi RSA (`private.key` e `public.key`) nella cartella `keys/`;
+- Generazione delle chiavi RSA (`private.pem` e `public.pem`) nella cartella `keys/`;
 - Creazione del database SQLite in `data/database.sqlite`;
 - Popolamento del database con i dati iniziali (utenti, modelli e richieste di aggiornamento);
 - Avvio del server Express sulla porta **3000**.
@@ -245,13 +245,33 @@ module.exports = {
 };
 ```
 
-## Copertura dei test
+## Test del progetto mediante chiamate con Postman
 
-I test implementati verificano il corretto funzionamento dei middleware più importanti dell'applicazione, assicurando che:
+Questa sezione sarà completata con una raccolta di esempi di chiamate effettuate con **Postman** per verificare il corretto funzionamento di tutti gli endpoint dell'applicazione.
 
-- le richieste non autenticate vengano rifiutate correttamente;
-- i token JWT validi vengano elaborati correttamente;
-- gli errori vengano gestiti e restituiti con un formato uniforme;
-- i codici di stato HTTP siano coerenti con la tipologia di errore.
+### Endpoint da testare
 
-L'adozione di test automatici riduce il rischio di regressioni, migliora l'affidabilità del progetto e facilita la manutenzione del codice nel tempo.
+Di seguito l'elenco delle principali rotte da validare, con relative richieste e risposte attese.
+
+#### 1. Autenticazione
+
+- **POST /auth/login** – Login utente e ottenimento token JWT.
+- **POST /auth/refill** – Ricarica token (solo admin).
+
+#### 2. Modelli (Grid Models)
+
+- **GET /models** – Elenco modelli dell'utente.
+- **GET /models/:id** – Dettaglio di un modello.
+- **POST /models/create** – Creazione nuovo modello con griglia.
+- **POST /models/:id/execute** – Esecuzione dell'algoritmo A* su un modello.
+
+#### 3. Richieste di aggiornamento
+
+- **POST /updates/create** – Proposta di modifica di una o più celle.
+- **POST /updates/:id/approve** – Approvazione di una richiesta pending.
+- **POST /updates/:id/reject** – Rifiuto di una richiesta pending.
+- **POST /updates/bulk** – Approvazione/rifiuto in blocco di più richieste.
+- **GET /updates/sent** – Richieste inviate dall'utente.
+- **GET /updates/received** – Richieste ricevute (per modelli di proprietà).
+- **GET /updates/history/:modelId** – Storico modifiche con filtri.
+- **GET /updates/status/:modelId** – Verifica presenza di richieste pending.
