@@ -281,6 +281,11 @@ Di seguito l'elenco delle principali rotte da validare, con relative richieste e
 
 ![Ricarica - Successo](./docs/images/CASO6:Successo–Ricarica-valida.png)
 
+#### ❌ CASO 7: Errore – Token mancante o non valido
+
+![Ricarica - Errore](./docs/images/CASO7:Errore–Token-mancante-o-non-valido(headers).png)
+
+![Ricarica - Errore](./docs/images/CASO7:Errore–Token-mancante-o-non-valido(risosta).png)
 
 
 
