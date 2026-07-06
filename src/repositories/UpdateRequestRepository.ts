@@ -14,13 +14,13 @@ export class UpdateRequestRepository {
           include: [
             {
               association: "owner",
-              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
             }
           ]
         },
         {
           association: "requester",
-          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
         }
       ]
     });
@@ -35,13 +35,13 @@ export class UpdateRequestRepository {
           include: [
             {
               association: "owner",
-              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
             }
           ]
         },
         {
           association: "requester",
-          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
         }
       ]
     });
@@ -56,13 +56,13 @@ export class UpdateRequestRepository {
           include: [
             {
               association: "owner",
-              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
             }
           ]
         },
         {
           association: "requester",
-          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
         }
       ],
       where: { status: "pending" }
@@ -78,13 +78,13 @@ export class UpdateRequestRepository {
           include: [
             {
               association: "owner",
-              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
             }
           ]
         },
         {
           association: "requester",
-          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
         }
       ]
     });
@@ -121,13 +121,13 @@ export class UpdateRequestRepository {
           include: [
             {
               association: "owner",
-              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+              attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
             }
           ]
         },
         {
           association: "requester",
-          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt, tokens"] }
+          attributes: { exclude: ["passwordHash", "createdAt", "updatedAt", "tokens"] }
         }
       ]
     });
