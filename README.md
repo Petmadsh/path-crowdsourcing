@@ -22,11 +22,41 @@ Il sistema adotta un meccanismo di **token** per regolare l'uso delle risorse: o
 
 > *[Da inserire]*
 
-#### Diagrammi delle Sequenze
+## Diagrammi delle sequenze
 
-> *[Da inserire]*
+### 1. Creazione di un modello
 
----
+![](./docs/images/CreazioneModello.png)
+
+### 2. Esecuzione di un modello (A*)
+
+![](./docs/images/Esecuzione.png)
+
+### 3. Proposta di aggiornamento (non proprietario)
+
+![](./docs/images/Modifica.png)
+
+### 4. Approvazione di una richiesta
+
+![](./docs/images/Approvazione.png)
+
+
+### 5. Gestione richieste in bulk
+
+![](./docs/images/Bulk.png)
+
+### 6. Visualizzazione storico aggiornamenti
+
+![](./docs/images/Storico.png)
+
+### 7. Verifica stato pending del modello
+
+![](./docs/images/StatoPending.png)
+
+### 8. Ricarica token
+
+![](./docs/images/Ricarica.png)
+
 
 ### Descrizione dei Pattern Utilizzati
 
