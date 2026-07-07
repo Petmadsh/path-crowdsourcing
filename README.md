@@ -20,7 +20,17 @@ Il sistema adotta un meccanismo di **token** per regolare l'uso delle risorse: o
 
 #### Diagramma dei Casi d'Uso
 
-> *[Da inserire]*
+### 1. Attori
+
+![](./docs/images/attori.png)
+
+
+### 1. Sistema
+
+![](./docs/images/casiUso.png)
+
+> **Nota**: Per effettuare qualsiasi richiesta alle API protette, sia **User** che **Admin** devono essere autenticati tramite token JWT. Il token deve essere incluso nell'header `Authorization: Bearer <token>` di ogni richiesta. In caso di token mancante, non valido o scaduto, il sistema restituisce un errore `401 Unauthorized`.
+
 
 ## Diagrammi delle sequenze
 
