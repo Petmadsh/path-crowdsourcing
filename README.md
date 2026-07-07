@@ -72,7 +72,7 @@ Il sistema adotta un meccanismo di **token** per regolare l'uso delle risorse: o
 
 Il progetto adotta tre pattern architetturali principali, scelti per garantire separazione delle responsabilità, manutenibilità e scalabilità del codice.
 
-#### 1. Model-View-Controller (MVC)
+#### 1. Model-View-Controller (MVC) con Service Layer
 
 **Descrizione**:  
 Il pattern MVC è stato implementato per separare la logica di presentazione (routes/controllers) dalla logica di business (services) e dalla gestione dei dati (models).
@@ -271,11 +271,28 @@ module.exports = {
 
 ## Test del progetto mediante chiamate con Postman
 
-Questa sezione sarà completata con una raccolta di esempi di chiamate effettuate con **Postman** per verificare il corretto funzionamento di tutti gli endpoint dell'applicazione.
+Di seguito sono riportati esempi di chiamate effettuate con **Postman** per verificare il corretto funzionamento di tutti gli endpoint dell'applicazione. Per ogni endpoint vengono mostrati casi di successo e di errore.
 
-### Endpoint da testare
+### Endpoint testati
 
-Di seguito l'elenco delle principali rotte da validare, con relative richieste e risposte attese.
+| Metodo | Endpoint | Descrizione | Autenticazione |
+|--------|----------|-------------|----------------|
+| POST   | `/auth/login` | Login utente e ottenimento JWT | No |
+| POST   | `/auth/refill` | Ricarica token (solo admin) | JWT (admin) |
+| GET    | `/models` | Elenco modelli dell'utente | JWT |
+| GET    | `/models/:id` | Dettaglio di un modello | JWT |
+| POST   | `/models/create` | Creazione nuovo modello | JWT |
+| POST   | `/models/:id/execute` | Esecuzione A* su un modello | JWT |
+| POST   | `/updates/create` | Proposta di modifica di una o più celle | JWT |
+| POST   | `/updates/:id/approve` | Approvazione di una richiesta pending | JWT |
+| POST   | `/updates/:id/reject` | Rifiuto di una richiesta pending | JWT |
+| POST   | `/updates/bulk` | Approvazione/rifiuto in blocco di più richieste | JWT |
+| GET    | `/updates/sent` | Richieste inviate dall'utente | JWT |
+| GET    | `/updates/received` | Richieste ricevute (per modelli di proprietà) | JWT |
+| GET    | `/updates/history/:modelId` | Storico modifiche con filtri | JWT |
+| GET    | `/updates/status/:modelId` | Verifica presenza di richieste pending | JWT |
+
+---
 
 #### 1. Autenticazione
 
