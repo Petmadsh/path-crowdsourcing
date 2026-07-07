@@ -87,9 +87,6 @@ MVC è stato scelto perché:
 - **Facilita il testing**: È possibile testare service e repository in isolamento senza dipendere dal livello HTTP.
 - **Migliora la manutenibilità**: Modifiche alla logica di business o alla struttura dei dati non influenzano il livello di presentazione.
 
-**Esempio nel progetto**:  
-`ModelController` delega a `ModelService` la creazione di un modello; `ModelService` utilizza `GridModelRepository` per l'accesso al database e `UserRepository` per la gestione dei token.
-
 ---
 
 #### 2. Repository Pattern
@@ -108,8 +105,6 @@ Il Repository pattern è stato scelto perché:
 - **Facilita il testing**: È possibile mockare i repository per testare i service in isolamento.
 - **Manutenibilità**: Cambiamenti nello schema del database o nell'ORM richiedono modifiche solo nei repository, non nei service.
 
-**Esempio nel progetto**:  
-`UpdateRequestService` utilizza `UpdateRequestRepository.findHistory()` per ottenere lo storico delle modifiche con filtri, senza dover costruire manualmente le condizioni `WHERE` in ogni chiamata.
 
 ---
 
@@ -130,17 +125,6 @@ La Chain of Responsibility è stata scelta perché:
 - **Componibilità**: I middleware possono essere combinati liberamente sulle rotte, consentendo di riutilizzare la stessa logica in contesti diversi.
 - **Manutenibilità**: Aggiungere o modificare un comportamento (es. aggiungere un nuovo controllo) richiede solo di inserire un nuovo middleware nella catena, senza toccare il codice esistente.
 - **Gestione centralizzata degli errori**: `errorMiddleware` cattura tutte le eccezioni e restituisce risposte uniformi, migliorando l'esperienza del client.
-
-**Esempio nel progetto**:  
-La rotta `POST /models/create` utilizza una catena di middleware:
-1. `authMiddleware` → verifica autenticazione
-2. `roleMiddleware("user")` → verifica ruolo
-3. `tokenCheckMiddleware` → verifica credito
-4. Middleware di validazione → validano `width`, `height`, `grid`
-5. `validate` → trasforma errori di validazione in risposta 400
-6. `modelController.createModel` → esegue la logica di business
-
-In caso di errore in qualsiasi punto della catena, `errorMiddleware` gestisce l'eccezione e restituisce una risposta appropriata.
 
 ---
 
