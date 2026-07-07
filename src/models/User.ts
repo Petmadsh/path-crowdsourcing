@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/database";
 
-interface UserAttributes {
+interface UserAttributes { // Definizione degli attributi del modello User
   id: number;
   email: string;
   passwordHash?: string;
@@ -11,9 +11,9 @@ interface UserAttributes {
   updatedAt?: Date;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, "id" | "role" | "tokens"> {}
+interface UserCreationAttributes extends Optional<UserAttributes, "id" | "role" | "tokens"> {} // Definizione degli attributi necessari per creare un'istanza di User
 
-export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes { // Definizione della classe User che estende Model di Sequelize
   public id!: number;
   public email!: string;
   public passwordHash!: string;
@@ -32,7 +32,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   }
 }
 
-User.init(
+User.init( // Inizializzazione del modello User con i suoi attributi e opzioni
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,

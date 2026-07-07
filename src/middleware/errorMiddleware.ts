@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { HttpError } from "http-errors";
 
 
-export function errorMiddleware(
+export function errorMiddleware( // Middleware per la gestione degli errori
   err: HttpError | Error,
   _req: Request,
   res: Response,

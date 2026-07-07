@@ -1,10 +1,7 @@
 import { UpdateRequest } from "../models/UpdateRequest";
 import { GridModel } from "../models/GridModel";
 
-/**
- * Applica un set di celle a una griglia, restituendo una NUOVA griglia
- * (stessa logica usata da UpdateRequestService.applyCells nel flusso reale).
- */
+// Funzione per applicare le modifiche alle celle della griglia di un modello GridModel
 function applyCells(
   grid: number[][],
   cells: { x: number; y: number; newValue: number }[]
@@ -21,11 +18,7 @@ function applyCells(
   return newGrid;
 }
 
-/**
- * Crea una UpdateRequest. Se lo status è "approved", applica anche
- * la modifica alla griglia del modello (come farebbe il service reale),
- * cosi' che il DB mostri davvero una "seconda versione" del modello.
- */
+// Funzione per creare una richiesta di aggiornamento UpdateRequest e, se approvata, aggiornare la griglia del modello GridModel
 async function seedUpdateRequest(params: {
   model: GridModel;
   requesterId: number;

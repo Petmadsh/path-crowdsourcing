@@ -3,21 +3,21 @@ import { UserRepository } from "../repositories/UserRepository";
 import { AStarFinder } from "astar-typescript";
 import createError from "http-errors";
 
-export class ModelService {
+export class ModelService { // Servizio per la gestione dei modelli GridModel e l'esecuzione dell'algoritmo A* sui modelli
   constructor(
     private modelRepo: GridModelRepository,
     private userRepo: UserRepository
   ) {}
 
-  async getModelsByOwner(ownerId: number) {
+  async getModelsByOwner(ownerId: number) { // Metodo per ottenere tutti i modelli GridModel di un determinato proprietario (utente)
     return this.modelRepo.findByOwner(ownerId);
   }
 
-  async getModelById(id: number) {
+  async getModelById(id: number) { // Metodo per ottenere un modello GridModel per ID, lancia un errore se non trovato
     return this.modelRepo.findById(id);
   }
 
-  async createModel(ownerId: number, width: number, height: number, grid: number[][]) {
+  async createModel(ownerId: number, width: number, height: number, grid: number[][]) { // Metodo per creare un nuovo modello GridModel, calcolando il costo in token e aggiornando il saldo dell'utente
     const cellCount = width * height;
     const cost = 0.025 * cellCount;
     const newBalance = await this.userRepo.decreaseTokens(ownerId, cost);
@@ -35,7 +35,7 @@ export class ModelService {
   };
   }
 
-  async executeModel(
+  async executeModel( // Metodo per eseguire l'algoritmo A* su un modello GridModel, calcolando il percorso tra start e goal, il costo in token e aggiornando il saldo dell'utente
     modelId: number,
     userId: number,
     start: { x: number; y: number },

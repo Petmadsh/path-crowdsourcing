@@ -13,7 +13,7 @@ export class ModelController {
     } catch (err) {
       next(err);
     }
-  };
+  };  // Gestore per ottenere i modelli dell'utente autenticato
 
   getModelById = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -28,7 +28,7 @@ export class ModelController {
     } catch (err) {
       next(err);
     }
-  };
+  }; // Gestore per ottenere un modello specifico per ID
 
   createModel = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -40,8 +40,8 @@ export class ModelController {
       res.json(model);
     } catch (err) {
       next(err);
-    }
-  };
+    }// Gestore per creare un nuovo modello
+  }; 
 
   executeModel = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -60,6 +60,6 @@ export class ModelController {
       res.json(result);
     } catch (err) {
       next(err);
-    }
+    }// Gestore per eseguire un modello specifico con i parametri forniti
   };
 }

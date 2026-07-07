@@ -3,7 +3,7 @@ import { seedUsers } from "./users.seed";
 import { seedModels } from "./models.seed";
 import { seedUpdates } from "./updates.seed";
 
-async function runSeed() {
+async function runSeed() { // Funzione principale per eseguire il seeding del database
   try {
     console.log("Reset database...");
     await sequelize.sync({ force: true });

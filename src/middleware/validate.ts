@@ -21,7 +21,7 @@ export function validate(req: Request, res: Response, next: NextFunction) {
  * @param allowedFields - array di nomi di campi permessi
  * @returns una funzione per express-validator
  */
-export function noExtraFields(allowedFields: string[]) {
+export function noExtraFields(allowedFields: string[]) { // Middleware per rifiutare campi non consentiti nel body
   return (value: any) => {
     const extra = Object.keys(value).filter(k => !allowedFields.includes(k));
     if (extra.length > 0) {
@@ -31,11 +31,7 @@ export function noExtraFields(allowedFields: string[]) {
   };
 }
 
-/**
- * Middleware per rifiutare parametri query non consentiti.
- * @param allowedParams - array di nomi di parametri permessi
- * @returns una funzione per express-validator
- */
+// Middleware per rifiutare parametri di query non consentiti
 export function noExtraQuery(allowedParams: string[]) {
   return (_value: any, { req }: any) => {
     const extra = Object.keys(req.query).filter(
@@ -48,10 +44,7 @@ export function noExtraQuery(allowedParams: string[]) {
   };
 }
 
-/**
- * Validatore personalizzato per controllare la griglia in base a width/height.
- * Deve essere usato con express-validator: body('grid').custom(validateGridDimensions)
- */
+// Middleware per validare le dimensioni della griglia
 export function validateGridDimensions(value: any, { req }: any) {
   const { height, width } = req.body;
 

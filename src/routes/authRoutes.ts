@@ -13,7 +13,7 @@ const userRepo = new UserRepository();
 const authService = new AuthService(userRepo);
 const authController = new AuthController(authService);
 
-// Login
+// Login endpoint
 router.post(
   "/login",
   [

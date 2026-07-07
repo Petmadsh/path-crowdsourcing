@@ -8,14 +8,14 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const app = express();
+const app = express(); // Crea un'app Express
 app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/models", modelRoutes);
 app.use("/updates", updateRequestRoutes);
 
-// 404 per route non trovate
+
 app.use((req, res, next) => {
   next(createError.NotFound(`Route ${req.method} ${req.originalUrl} non trovata`));
 });

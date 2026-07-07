@@ -3,7 +3,7 @@ import path from "path";
 import dotenv from "dotenv";
 import type { Algorithm, SignOptions } from "jsonwebtoken";
 
-dotenv.config();
+dotenv.config(); // Carica le variabili d'ambiente dal file .env
 
 function loadKeyFromFile(envVar: string): string {
   const filePath = process.env[envVar];
@@ -19,7 +19,7 @@ function loadKeyFromFile(envVar: string): string {
   }
 
   return fs.readFileSync(resolved, "utf8");
-}
+} //
 
 export const PRIVATE_KEY = loadKeyFromFile("JWT_PRIVATE_KEY");
 export const PUBLIC_KEY = loadKeyFromFile("JWT_PUBLIC_KEY");

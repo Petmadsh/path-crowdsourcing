@@ -12,6 +12,7 @@ jest.mock('../../config/jwt', () => ({
   JWT_ALGORITHM: 'RS256',
 }));
 
+
 describe('authMiddleware', () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
@@ -25,10 +26,11 @@ describe('authMiddleware', () => {
     next = jest.fn();
   });
 
+  
   test('dovrebbe chiamare next con errore 401 se manca header Authorization', () => {
     authMiddleware(req as Request, res as Response, next);
     expect(next).toHaveBeenCalledWith(expect.objectContaining({ status: 401 }));
-  });
+  }); // Test per il caso in cui manca l'header Authorization
 
   test('dovrebbe chiamare next con errore 401 se token non valido', () => {
     req.headers = { authorization: 'Bearer invalid-token' };
@@ -38,7 +40,7 @@ describe('authMiddleware', () => {
     });
     authMiddleware(req as Request, res as Response, next);
     expect(next).toHaveBeenCalledWith(expect.objectContaining({ status: 401 }));
-  });
+  }); // Test per il caso in cui il token non è valido
 
   test('dovrebbe impostare req.user e chiamare next se token valido', () => {
     req.headers = { authorization: 'Bearer valid-token' };
@@ -48,5 +50,5 @@ describe('authMiddleware', () => {
     authMiddleware(req as Request, res as Response, next);
     expect(req.user).toEqual(decoded);
     expect(next).toHaveBeenCalledWith(); // senza argomenti
-  });
+  });// Test per il caso in cui il token è valido
 });

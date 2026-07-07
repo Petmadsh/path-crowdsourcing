@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { errorMiddleware } from '../../middleware/errorMiddleware';
 import createError from 'http-errors';
 
+
+
 describe('errorMiddleware', () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
@@ -21,12 +23,12 @@ describe('errorMiddleware', () => {
     errorMiddleware(err, req as Request, res as Response, next);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ error: 'Generic error' });
-  });
+  });// Test per il caso di errore generico
 
   test('dovrebbe restituire status e messaggio corretti per HttpError', () => {
     const err = createError(400, 'Bad request');
     errorMiddleware(err, req as Request, res as Response, next);
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Bad request' });
-  });
+  });// Test per il caso di HttpError con status 400
 });

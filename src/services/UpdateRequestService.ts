@@ -4,14 +4,14 @@ import { UserRepository } from "../repositories/UserRepository";
 import { CellUpdate } from "../types/CellUpdate";
 import createError from "http-errors";
 
-export class UpdateRequestService {
+export class UpdateRequestService { // Servizio per la gestione delle richieste di aggiornamento dei modelli GridModel
   constructor(
     private updateRepo: UpdateRequestRepository,
     private modelRepo: GridModelRepository,
     private userRepo: UserRepository
   ) {}
 
-  private validateCells(grid: number[][], cells: CellUpdate[]): void {
+  private validateCells(grid: number[][], cells: CellUpdate[]): void { // Metodo privato per validare le celle da aggiornare, controllando che siano all'interno della griglia e che il nuovo valore sia diverso da quello attuale
    const height = grid.length;
    const width = grid[0]?.length || 0;
 
@@ -33,7 +33,7 @@ export class UpdateRequestService {
   }
 }
 
-  private applyCells(grid: number[][], cells: CellUpdate[]): number[][] {
+  private applyCells(grid: number[][], cells: CellUpdate[]): number[][] { // Metodo privato per applicare le modifiche alle celle della griglia, restituendo una nuova griglia aggiornata
     const newGrid = grid.map(row => [...row]);
     for (const c of cells) {
       if (
@@ -46,7 +46,7 @@ export class UpdateRequestService {
     return newGrid;
   }
 
-  async createRequest(modelId: number, requesterId: number, cells: CellUpdate[]) {
+  async createRequest(modelId: number, requesterId: number, cells: CellUpdate[]) { // Metodo per creare una nuova richiesta di aggiornamento, validando le celle e calcolando il costo in token
     const model = await this.modelRepo.findById(modelId);
     if (!model) throw createError.NotFound("Modello non trovato");
 
@@ -85,7 +85,7 @@ export class UpdateRequestService {
     }
   }
 
-  async approveRequest(requestId: number, approverId: number) {
+  async approveRequest(requestId: number, approverId: number) { // Metodo per approvare una richiesta di aggiornamento, verificando che l'utente sia il proprietario del modello e che la richiesta sia ancora in stato "pending"
   const request = await this.updateRepo.findById(requestId);
   if (!request) throw createError.NotFound("Richiesta non trovata");
 
@@ -113,7 +113,7 @@ export class UpdateRequestService {
   };
 }
 
-async rejectRequest(requestId: number, approverId: number) {
+async rejectRequest(requestId: number, approverId: number) { // Metodo per rifiutare una richiesta di aggiornamento, verificando che l'utente sia il proprietario del modello e che la richiesta sia ancora in stato "pending"
   const request = await this.updateRepo.findById(requestId);
   if (!request) throw createError.NotFound("Richiesta non trovata");
 
@@ -133,7 +133,7 @@ async rejectRequest(requestId: number, approverId: number) {
   return { message: "Richiesta rifiutata" };
 }
 
-  async bulkUpdate(approverId: number, approveIds: number[], rejectIds: number[]) {
+  async bulkUpdate(approverId: number, approveIds: number[], rejectIds: number[]) { // Metodo per approvare o rifiutare in blocco più richieste di aggiornamento, gestendo eventuali errori e restituendo un messaggio di riepilogo
   const errors: string[] = [];
 
   for (const id of approveIds) {
@@ -161,7 +161,7 @@ async rejectRequest(requestId: number, approverId: number) {
   return { message: "Aggiornamento Bulk completato" };
 }
 
-  async getHistory(modelId: number, filters: any) {
+  async getHistory(modelId: number, filters: any) { // Metodo per ottenere la cronologia delle richieste di aggiornamento per un modello specifico, con filtri opzionali per data e stato
 
   const model = await this.modelRepo.findById(modelId);
   if (!model) {
@@ -175,7 +175,7 @@ async rejectRequest(requestId: number, approverId: number) {
    };
  }
 
-  async getModelStatus(modelId: number) {
+  async getModelStatus(modelId: number) { // Metodo per ottenere lo stato attuale delle richieste di aggiornamento per un modello specifico, verificando se ci sono richieste in sospeso
 
       // Verifica che il modello esista
   const model = await this.modelRepo.findById(modelId);
@@ -187,11 +187,11 @@ async rejectRequest(requestId: number, approverId: number) {
     return { pending: pending.length > 0 };
   }
 
-  async getRequestsByRequester(requesterId: number) {
+  async getRequestsByRequester(requesterId: number) { // Metodo per ottenere tutte le richieste inviate da un utente specifico
     return this.updateRepo.findByRequester(requesterId);
   }
 
-  async getRequestsForOwner(ownerId: number) {
+  async getRequestsForOwner(ownerId: number) { // Metodo per ottenere tutte le richieste ricevute da un proprietario di modello specifico
     return this.updateRepo.findPendingByOwner(ownerId);
   }
 }

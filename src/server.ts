@@ -7,7 +7,7 @@ dotenv.config();
 // Gestione dinamica della porta
 const PORT = process.env.PORT || 3000;
 
-async function start() {
+async function start() { // Funzione asincrona per avviare il server e gestire la connessione al database
   try {
     // 1. Autentica e sincronizza il database SQLite prima di accettare richieste
     console.log("Connecting to the database...");

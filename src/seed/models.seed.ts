@@ -1,9 +1,9 @@
 import { GridModel } from "../models/GridModel";
 
-export async function seedModels(users: any) {
+export async function seedModels(users: any) { // Funzione per eseguire il seeding dei modelli GridModel nel database
   const { user1, user2 } = users;
 
-  const model1 = await GridModel.create({
+  const model1 = await GridModel.create({ 
     ownerId: user1.id,
     width: 5,
     height: 5,

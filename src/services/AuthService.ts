@@ -8,14 +8,15 @@ import {
 } from "../config/jwt";
 import createError from "http-errors";
 
-export class AuthService {
+
+export class AuthService { // Servizio per l'autenticazione degli utenti
   constructor(private userRepo: UserRepository) {}
 
   getUserRepository() {
     return this.userRepo;
   }
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string) { // Metodo per il login dell'utente, verifica le credenziali e genera un token JWT
     const user = await this.userRepo.findByEmail(email);
     if (!user) {
       throw createError.Unauthorized("Credenziali non valide");

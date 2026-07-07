@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/AuthService";
 import createError from "http-errors";
 
+
 export class AuthController {
   constructor(private authService: AuthService) {}
 
@@ -13,7 +14,7 @@ export class AuthController {
     } catch (err) {
       next(err);
     }
-  };
+  }; // Gestore per il login dell'utente
 
 
   refillTokens = async (req: Request, res: Response, next: NextFunction) => {
@@ -24,7 +25,6 @@ export class AuthController {
         throw createError.BadRequest("Email e ammontare positivo obbligatori");
       }
 
-      // Interfacciamento diretto con il UserRepository aggiornato
       const updatedUser = await this.authService
       .getUserRepository().addTokensByEmail(email, Number(amount));
 
@@ -40,5 +40,5 @@ export class AuthController {
     } catch (err) {
       next(err);
     }
-  };
+  }; // Gestore per la ricarica dei token dell'utente
 }

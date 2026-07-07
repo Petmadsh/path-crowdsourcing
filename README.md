@@ -6,10 +6,10 @@
 
 - **Creare modelli** di griglia (matrici binarie 0/1) specificando dimensioni e valori iniziali. Ogni creazione ha un costo in token (0.025 per cella), addebitato all'utente.
 - **Eseguire l'algoritmo A*** su un modello esistente fornendo punto di partenza e arrivo, ottenendo il percorso minimo, il costo in passi e il tempo di esecuzione. Anche l'esecuzione consuma token (stesso costo della creazione).
-- **Proporre modifiche** a una o più celle di un modello di cui non si è proprietari. La richiesta, che costa 0.25 token per cella, viene posta in stato *pending* in attesa di approvazione o rifiuto da parte del proprietario del modello.
-- **Gestire le richieste** in sospeso: il proprietario può approvare o rifiutare singolarmente o in modalità bulk; in caso di approvazione, la griglia viene aggiornata automaticamente.
+- **Proporre modifiche** a una o più celle. La richiesta, che costa 0.25 token per cella, viene posta in stato *pending* in attesa di approvazione o rifiuto da parte del proprietario del modello.
+- **Gestire le richieste in sospeso**: il proprietario può approvare o rifiutare singolarmente o in modalità bulk; in caso di approvazione, la griglia viene aggiornata automaticamente.
 - **Visualizzare lo storico** delle modifiche di un modello, con filtri per data e stato, e lo stato di pending di un modello.
-- **Ricevere notifiche** delle richieste pendenti relative ai propri modelli tramite apposite rotte.
+
 
 Il sistema adotta un meccanismo di **token** per regolare l'uso delle risorse: ogni utente dispone di un credito iniziale (impostato tramite seed) che viene decrementato a ogni operazione a pagamento. Gli amministratori possono ricaricare il credito di un utente tramite un'endpoint dedicata. L'autenticazione è basata su **JWT** con firma RS256 e le chiavi sono caricate da file `docker-compose.yml`.
 

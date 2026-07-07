@@ -18,7 +18,7 @@ export class UpdateRequestController {
     } catch (err) {
       next(err);
     }
-  };
+  }; // Gestore per creare una nuova richiesta di aggiornamento
 
   approveRequest = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -32,7 +32,7 @@ export class UpdateRequestController {
       res.json(result);
     } catch (err) {
       next(err);
-    }
+    } // Gestore per approvare una richiesta di aggiornamento
   };
 
   rejectRequest = async (req: Request, res: Response, next: NextFunction) => {
@@ -47,7 +47,7 @@ export class UpdateRequestController {
       res.json(result);
     } catch (err) {
       next(err);
-    }
+    } // Gestore per rifiutare una richiesta di aggiornamento
   };
 
   getSentRequests = async (req: Request, res: Response, next: NextFunction) => {
@@ -57,7 +57,7 @@ export class UpdateRequestController {
       res.json(requests);
     } catch (err) {
       next(err);
-    }
+    } // Gestore per ottenere le richieste inviate dall'utente autenticato
   };
 
   getReceivedRequests = async (req: Request, res: Response, next: NextFunction) => {
@@ -67,7 +67,7 @@ export class UpdateRequestController {
       res.json(requests);
     } catch (err) {
       next(err);
-    }
+    }// Gestore per ottenere le richieste ricevute dall'utente autenticato
   };
 
   getHistory = async (req: Request, res: Response, next: NextFunction) => {
@@ -82,7 +82,7 @@ export class UpdateRequestController {
       res.json(result);
     } catch (err) {
       next(err);
-    }
+    }// Gestore per ottenere la cronologia delle richieste di aggiornamento per un modello specifico
   };
 
   getModelStatus = async (req: Request, res: Response, next: NextFunction) => {
@@ -92,7 +92,7 @@ export class UpdateRequestController {
       res.json(result);
     } catch (err) {
       next(err);
-    }
+    }// Gestore per ottenere lo stato attuale delle richieste di aggiornamento per un modello specifico
   };
 
   bulkUpdate = async (req: Request, res: Response, next: NextFunction) => {
@@ -103,6 +103,6 @@ export class UpdateRequestController {
       res.json(result);
     } catch (err) {
       next(err);
-    }
+    }// Gestore per approvare o rifiutare in blocco le richieste di aggiornamento
   };
 }
