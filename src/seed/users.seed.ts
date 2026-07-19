@@ -24,5 +24,14 @@ export async function seedUsers() { // Funzione per eseguire il seeding degli ut
     tokens: 5
   });
 
-  return { admin, user1, user2 };
+  // Utente dedicato ai test automatici di "credito insufficiente"
+
+  const lowCreditUser = await User.create({
+    email: "lowcredit@example.com",
+    passwordHash: password,
+    role: "user",
+    tokens: 0.01
+  });
+
+  return { admin, user1, user2, lowCreditUser };
 }
